@@ -1,0 +1,105 @@
+options:
+	prefix: &7[§x§4§d§c§8§a§3Aqua pr&7]
+	color: §x§4§d§c§8§a§3
+	
+on join:
+	if player is in "megalodon":
+		set join message to "&6[{@color}+&6] {@color}&l%player%"
+	else:
+		set join message to "&7[§x§4§d§c§8§a§3+&7] {@color}&l%player%"
+on quit:
+	set leave message to "&7[&c-&7] %player%"	
+
+
+
+command addblock:
+	permission: *
+	trigger:
+		add player's tool to {blockbreak::*}
+		send "{@prefix} {@color}you have successfully added a new item to the block counter"
+		
+		
+on block break:
+	if event-block contains {blockbreak::*}:
+		add 1 to {blockbroken1k::%Player%}
+		add 1 to {blockbroken5k::%Player%}
+		add 1 to {blockbroken10k::%Player%}
+	if {blockbroken1k::%Player%} > 1000:
+		if {blocks1k::%player%} is not set:
+			add 200 to player's balance
+			send "{@prefix} {@color}You have been given 100 tokens for breaking 1000 blocks"
+			set {blockbroken1k::%Player%} to 0
+			set {blocks1k::%player%} to true
+	if {blockbroken5k::%Player%} > 5000:
+		if {blocks5k::%player%} is not set:
+			add 200 to player's balance
+			send "{@prefix} {@color}You have been given 200 tokens for breaking 5000 blocks"
+			set {blockbroken5k::%Player%} to 0
+			set {blocks5k::%player%} to true
+	if {blockbroken10k::%Player%} > 10000:
+		if {blocks10k::%player%} is not set:
+			add 500 to player's balance
+			send "{@prefix} {@color}You have been given 500 tokens for breaking 10000 blocks"
+			set {blockbroken10k::%Player%} to 0
+			clear {blocks5k::%player%}
+			clear {blocks1k::%player%}
+			set {blockbroken1k::%Player%} to 0
+			set {blockbroken5k::%Player%} to 0
+			set {blockbroken10k::%Player%} to 0
+command testblocks:
+	trigger:
+		send "%{blockbroken1k::%Player%}%"
+
+on rightclick with book and quill:
+	cancel event
+	close player's inventory
+	player's tool is book and quill named "&3Sea rock auto compresser"
+	{searockcompress::%player%} is not set
+	set {searockcompress::%player%} to true
+	remove 1 of player's tool from player's inventory
+	send "{@prefix} you now can auto compress sea rock"
+on rightclick with book and quill:
+	cancel event
+	close player's inventory
+	player's tool is book and quill named "&bWATER PIXEL AUTO COMPRESSOR"
+	{waterpixelcompress::%player%} is not set
+	set {waterpixelcompress::%player%} to true
+	remove 1 of player's tool from player's inventory
+	send "{@prefix} you now can auto compress water pixels"
+on rightclick with book and quill:
+	cancel event
+	close player's inventory
+	player's tool is book and quill named "&3PRISMARINE AUTO COMPRESSOR"
+	{prismarinecompress::%player%} is not set
+	set {prismarinecompress::%player%} to true
+	remove 1 of player's tool from player's inventory
+	send "{@prefix} you now can auto compress prismarine"
+on rightclick with book and quill:
+	cancel event
+	close player's inventory
+	player's tool is book and quill named "&b&lICE AUTO COMPRESSOR"
+	{icecompress::%player%} is not set
+	set {icecompress::%player%} to true
+	remove 1 of player's tool from player's inventory
+	send "{@prefix} you now can auto compress ice"
+command /givesearockauto:
+	permission: *
+	trigger:
+		give player book named "&3Sea rock auto compresser"
+		clear {searockcompress::%player%}
+		clear {autocompress::%player%}
+command /autocompress:
+	trigger:
+		{autocompress::%player%} is not set
+		set {autocompress::%player%} to true
+		send "{@prefix} you will now compress items automatically"
+on join:
+	execute console command "spawn %player%"
+command afk:
+	trigger:
+		teleport player to {afkzone}
+command setafk:
+	permission: *
+	trigger:
+		set {afkzone} to location of player
+		

@@ -1,0 +1,1315 @@
+variables:
+	{multiplyercost::%player%} = 10
+	{multiplyer::%player%} = 0
+	{multiplyertier::%player%} = 0
+	{purchasedmultiplyer::%player%} = 0
+	{giveitem::%player%} = 0
+	{tokenfinder::%player%} = 0
+	{tokenfindercost::%player%} = 200
+	{tokenfindertier::%player%} = 0
+	{rebirthmultiplier::%player%} = 0
+	{speedcost::%player%} = 1000
+	{speedtier::%player%} = 0
+	{hammertier::%player%} = 0
+	{hammercost::%player%} = 5000
+	{hammerchance::%player%} = 0
+	{luckytier::%player%} = 0
+	{luckychance::%player%} = 0
+	{luckycost::%player%} = 7500
+	{hastetier::%player%} = 0
+	{hastecost::%player%} = 7000
+	
+options:
+	prefix: &7[§x§4§d§c§8§a§3Aqua pr&7]
+	color: §x§4§d§c§8§a§3
+
+
+on first join:
+	clear player's current inventory
+	set slot 0 of player's inventory to stone pickaxe named "&7[&a0&7] &aStart Pickaxe" with lore "&7- can break sea rock"
+#------------------------FISH KEY---------------------------------------------------------------FISH KEY-----------------------FISH KEY--------------------------	
+on block break of oxidized copper or light blue glazed terracotta or packed ice or prismarine:
+	chance of 0.5%:
+		execute console command "goldencrates givekey %player% fish 1"
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+command /startitem:
+	permission: *
+	trigger:
+		set slot 0 of player's inventory to stone pickaxe named "&7[&a0&7] &aStart Pickaxe" with lore "&7- can break sea rock"
+on right click on air with stone pickaxe or iron pickaxe or diamond pickaxe or netherite pickaxe:
+	set metadata tag "upgrades" of player to chest inventory with 7 rows named "&b&lUpgrades"
+	set slot (integers between 0 and 53) of metadata tag "upgrades" of player to gray stained glass pane named "&7"
+	set slot 0 of (metadata tag "upgrades" of player) to light blue glass pane named "&7Cheap upgrades"
+	set slot 1 of (metadata tag "upgrades" of player) to light blue glass pane named "&7Cheap upgrades"
+	set slot 2 of (metadata tag "upgrades" of player) to light blue glass pane named "&7Cheap upgrades"
+	set slot 3 of (metadata tag "upgrades" of player) to light blue glass pane named "&7Cheap upgrades"
+	set slot 9 of (metadata tag "upgrades" of player) to light blue glass pane named "&7Cheap upgrades"
+	set slot 5 of (metadata tag "upgrades" of player) to blue stained glass pane named "&7Expensive Upgrades"
+	set slot 6 of (metadata tag "upgrades" of player) to blue stained glass pane named "&7Expensive Upgrades"
+	set slot 7 of (metadata tag "upgrades" of player) to blue stained glass pane named "&7Expensive Upgrades"
+	set slot 8 of (metadata tag "upgrades" of player) to blue stained glass pane named "&7Expensive Upgrades"
+	set slot 17 of (metadata tag "upgrades" of player) to blue stained glass pane named "&7Expensive Upgrades"
+	set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+	set slot 10 of (metadata tag "upgrades" of player) to magenta glazed terracotta named "&dMultiplier upgrade" with lore "&7Cost &7[&e⛁%{multiplyercost::%player%}%&7]" and "&7" and "&7current Multiplier: &7[&b%{purchasedmultiplyer::%player%}%&7]" and "&7Current Tier: [&a%{multiplyertier::%player%}%&7]"
+	set slot 11 of (metadata tag "upgrades" of player) to compass named "&eToken Finder" with lore "&7" and "&7Finder Cost (&e⛁%{tokenfindercost::%player%}%&7)" and "&7current tier (&e%{tokenfindertier::%player%}%&7)" and "&7current chance (&b%{tokenfinder::%player%}%&7)" and "&c&lMAX upgrade count 4"
+	set slot 12 of (metadata tag "upgrades" of player) to feather named "&f&lMovement Speed" with lore "&7" and "&7Cost to upgrade (&e⛁%{speedcost::%player%}%)" and "&7" and "&7Current Tier (&a%{speedtier::%player%}%&7)" and "&7" and "&c&lMAX UGRADE COUNT 2"
+	set slot 14 of (metadata tag "upgrades" of player) to anvil named "&7[&f&lJackhammer&7]" with lore "&7" and "&7has a small chance to break blocks" and "&7around you in a radius of 3" and "&7" and "&7Cost (&e⛁%{hammercost::%player%}%&7)" and "&7" and "&7Current tier (&a%{hammertier::%player%}%&7)" and "&7Current Chance (&b&l%{hammerchance::%player%}%&7)" and "&7" and "&c&lMAXIMUM LEVEL 10"
+	set slot 15 of (metadata tag "upgrades" of player) to beacon named "&7[&b&lLucky Block Finder&7]" with lore "&7" and "&7has a small chance to turn a block" and "&7into a lucky block giving you keys" and "&7tokens and multipliers" and "&7" and "&7upgrade cost (&e⛁%{luckycost::%player%}%&7)" and "&7lucky block tier (&a%{luckytier::%player%}%&7)" and "&7Lucky Block Chance (&b%{luckychance::%player%}%&7)" and "&7" and "&c&lMAX LEVEL 10"
+	set slot 16 of (metadata tag "upgrades" of player) to golden pickaxe named "&7[&eHaste&7]" with lore "&7Max upgrade 2" and "&7" and "&7Upgrade Cost (&e⛁%{hastecost::%player%}%&7)" and "&7Haste Tier (&a%{hastetier::%player%}%&7)"
+	open (metadata tag "upgrades" of player) to player
+on inventory click:
+	if event-inventory is (metadata tag "upgrades" of player):
+		cancel event
+		if index of event-slot is 10:
+			if player's balance is greater than or equal to {multiplyercost::%player%}:
+				send "{@prefix} you have purchased a multiplyer upgrade"
+				remove {multiplyercost::%player%} from player's balance
+				add 0.2 to {purchasedmultiplyer::%player%}
+				add 1 to {multiplyertier::%player%}
+				set {multiplyercost::%player%} to {purchasedmultiplyer::%player%} * {multiplyertier::%player%} * 20
+				wait 1 ticks
+				set slot 10 of (metadata tag "upgrades" of player) to magenta glazed terracotta named "&dMultiplyer upgrade" with lore "&7Cost &7[&e⛁%{multiplyercost::%player%}%&7]" and "&7" and "&7current multiplyer: &7[&b%{purchasedmultiplyer::%player%}%&7]" and "&7Current Tier: [&a%{multiplyertier::%player%}%&7]"
+				set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+				stop
+			else:
+				send "{@prefix} &cYou unfortunatly do not have enough tokens to purchase this upgrade"
+		if index of event-slot is 11:
+			if player's balance is greater than or equal to {tokenfindercost::%player%}:
+				if {tokenfinder::%player%} < 2:
+					send "{@prefix} you have upgraded your token finder"
+					add 0.5 to {tokenfinder::%player%}
+					add 1 to {tokenfindertier::%player%}
+					set {tokenfindercost::%player%} to {tokenfinder::%player%} * 64 +12 * 5.3 + 500
+					set slot 11 of (metadata tag "upgrades" of player) to compass named "&eToken Finder" with lore "&7" and "&7Finder Cost (&e⛁%{tokenfindercost::%player%}%&7)" and "&7current tier (&e%{tokenfindertier::%player%}%&7)" and "&7current chance (&b%{tokenfinder::%player%}%&7)" and "&c&lMAX upgrade count 4"
+					set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+				if {tokenfinder::%player%} = 2:
+					send "{@prefix} &csorry you cannot upgrade this anymore"
+			else:
+				send "{@prefix} &cYou unfortunatly do not have enough tokens to purchase this upgrade"
+				stop
+		if index of event-slot is 12:
+			if player's balance is greater than or equal to {speedcost::%player%}:
+				if {speedtier::%player%} < 2:
+					remove {speedcost::%player%} from player's balance 
+					send "{@prefix} you have purchased a speed upgrade"
+					add 1 to {speedtier::%player%} 
+					set {speedcost::%player%} to 1000*2
+					set slot 12 of (metadata tag "upgrades" of player) to feather named "&f&lMovement Speed" with lore "&7" and "&7Cost to upgrade (&e⛁%{speedcost::%player%}%)" and "&7" and "&7Current Tier (&a%{speedtier::%player%}%&7)" and "&7" and "&c&lMAX UGRADE COUNT 2"
+					set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+					if {speedtier::%player%} = 1:
+						set player's walk speed to 0.3
+					if {speedtier::%player%} = 2:
+						set player's walk speed to 0.4
+				else:
+					send "{@prefix} &cYou cannot upgrade this anymore"
+			else:
+				send "{@prefix} &cYou cannot afford to purchase this upgrade"
+		if index of event-slot is 14:
+			if player's balance is greater than or equal to {hammercost::%player%}:
+				if {hammertier::%player%} < 10:
+					remove {hammercost::%player%} from player's balance
+					send "{@prefix} you have purchased a jackhammer upgrade"
+					add 1 to {hammertier::%player%}
+					add 0.25 to {hammerchance::%player%}
+					set {hammercost::%player%} to {hammertier::%player%}*5000
+					set slot 14 of (metadata tag "upgrades" of player) to anvil named "&7[&f&lJackhammer&7]" with lore "&7" and "&7has a small chance to break blocks" and "&7around you in a radius of 3" and "&7" and "&7Cost (&e⛁%{hammercost::%player%}%&7)" and "&7" and "&7Current tier (&a%{hammertier::%player%}%&7)" and "&7Current Chance (&b&l%{hammerchance::%player%}%&7)" and "&7" and "&c&lMAXIMUM LEVEL 10"
+					set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+				else:
+					send "{@prefix} &cunfortunatly you have hit the maximum level for this upgrade"
+			else:
+				send "{@prefix} &cyou dont have enough tokens to purchase this upgrade"
+		if index of event-slot is 15:
+			if player's balance is greater than or equal to {luckycost::%player%}:
+				if {luckytier::%player%} < 10:
+					remove {luckycost::%player%} from player's balance
+					send "{@prefix} you have purchased a lucky block finder upgrade"
+					add 1 to {luckytier::%player%}
+					add 0.15 to {luckychance::%Player%}
+					set {luckycost::%player%} to 7500*{luckytier::%player%}
+					set slot 15 of (metadata tag "upgrades" of player) to beacon named "&7[&b&lLucky Block Finder&7]" with lore "&7" and "&7has a small chance to turn a block" and "&7into a lucky block giving you keys" and "&7tokens and multipliers" and "&7" and "&7upgrade cost (&e⛁%{luckycost::%player%}%&7)" and "&7lucky block tier (&a%{luckytier::%player%}%&7)" and "&7Lucky Block Chance (&b%{luckychance::%player%}%&7)" and "&7" and "&c&lMAX LEVEL 10"
+					set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+				else:
+					send "{@prefix} &cyou have already upgraded this as many times as you could"
+			else:
+				send "{@prefix} &cYou dont have enough tokens to purchase this upgrade"
+		if index of event-slot is 16:
+			if player's balance is greater than or equal to {hastecost::%player%}:
+				remove {hastecost::%player%} from player's balance
+				if {hastetier::%player%} < 2:
+					add 1 to {hastetier::%Player%}
+					send "{@prefix} you have purchased a haste upgrade" 
+					set {hastecost::%player%} to 7000*{hastetier::%player%}+3000
+					if {hastetier::%player%} = 1:
+						clear player's potion effects
+						apply haste 1 without particles to player for 999999999 days
+					if {hastetier::%player%} = 2:
+						clear player's potion effects
+						apply haste 2 without particles to player for 99999 days
+					set slot 16 of (metadata tag "upgrades" of player) to golden pickaxe named "&7[&eHaste&7]" with lore "&7Max upgrade 2" and "&7" and "&7Upgrade Cost (&e⛁%{hastecost::%player%}%&7)" and "&7Haste Tier (&a%{hastetier::%player%}%&7)"
+					set slot 4 of (metadata tag "upgrades" of player) to clock named "&eTokens" with lore "&e&l⛁%player's balance%"
+				else:
+					send "{@prefix} &cYou cannot upgrade this anymore"
+			else:
+				send "{@prefix} &cYou dont have enough tokens to buy this"
+command /clearhaste:
+	permission: *
+	trigger:
+		clear {hastetier::%player%}
+		clear {hastecost::%player%}
+		clear player's potion effects
+command /clearlucky:
+	permission: *
+	trigger:
+		clear {luckycost::%player%}
+		clear {luckytier::%player%}
+		clear {luckychance::%player%}
+command /clearhammer:
+	permission: *
+	trigger:
+		clear {hammertier::%player%}
+		clear {hammerchance::%player%}
+		clear {hammercost::%player%}
+command /clearspeed:
+	permission: *
+	trigger:
+		clear {speedcost::%player%}
+		clear {speedtier::%player%}
+		set player's walk speed to 0.2
+on join:
+	if {speedtier::%player%} = 1:
+		set player's walk speed to 0.3
+		if {speedtier::%player%} = 2:
+			set player's walk speed to 0.4
+command /cleartokenfinder:
+	permission: *
+	trigger:
+		clear {tokenfinder::%player%}
+		clear {tokenfindertier::%player%}
+		clear {tokenfindercost::%player%}
+command /resetjack:
+	trigger:
+		wait 60 ticks
+		loop all blocks in radius 1.8 around {eblock}:
+			loop-block is bedrock
+			set loop-block to oxidized copper
+on block break:
+	if event-block is oxidized copper or light blue glazed terracotta or packed ice or prismarine:
+		if {tokenfinder::%player%} = 1:
+			chance of 0.5%:
+				execute console command "tokens %player%"
+		if {tokenfindertier::%player%} = 2:
+			chance of 1%:
+				execute console command "tokens %player%"
+		if {tokenfindertier::%player%} = 3:
+			chance of 1.5%:
+				execute console command "tokens %player%"
+		if {tokenfindertier::%player%} = 4:
+			chance of 2%:
+				execute console command "tokens %player%"
+			
+command /tokens <player>:
+	permission: *
+	trigger:
+		chance of 50%:
+			add 10 to arg-1's balance 
+			send "{@prefix} you got ⛁10 tokens" to arg-1
+			stop
+		chance of 25%:
+			add 25 to arg-1's balance
+			send "{@prefix} you got ⛁25 tokens" to arg-1
+			stop
+		chance of 20%:
+			add 30 to arg-1's balance
+			send "{@prefix} you got ⛁30 tokens" to arg-1
+			stop
+		chance of 5%:
+			add 50 to arg-1's balance
+			send "{@prefix} you got ⛁50 tokens" to arg-1
+			stop
+		else:
+			execute player command "tokens"
+			stop
+on rightclick holding book:
+	if name of player's tool is "&bWater autocompress":
+		send "{@prefix} you can now autocompress water"
+		{waterauto::%player%} is not set
+		set {waterauto::%player%} to true
+		remove 1 of player's tool from player				
+command /atokens <integer>:
+	permission: *
+	trigger:
+		add arg-1 to player's balance
+		send "{@prefix} you have gained %arg-1% tokens"
+command /testtokens:
+	trigger:	
+		send "%{purchasedmultiplyer::%player%}% | %{multiplyercost::%player%}% | %player's balance%"
+command /clearmultiplyer:
+	permission: *
+	trigger:
+		set {purchasedmultiplyer::%player%} to 0
+		set {multiplyer::%player%} to 0
+		set {multiplyercost::%player%} to 0
+		set {multiplyertier::%player%} to 0
+#---------------------------JackHAMMER------------------------------------------------------------------------------------------
+on block break of oxidized copper:
+	chance of {hammerchance::%player%}%:
+		set {_waited::%player%} to difference between {jack.%player%.lastused} and now
+		if {_waited::%player%} is less than 20 seconds:
+			stop
+		set event-block to bedrock
+		loop blocks in radius 1.8 around event-block:
+			if loop-block is oxidized copper:
+				player's tool is stone pickaxe or iron pickaxe
+				cancel drops
+				set loop-block to bedrock
+				set {eblock} to event-block's location
+				execute console command "resetjack"
+		if name of player's tool is "&7[&a0&7] &aStart Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 16*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 2
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 16*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a1&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 18*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 8
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 18*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+8
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a2&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 20*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 16
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 20*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+16
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a3&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 22*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 22*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if player's tool is iron pickaxe:
+			lore of player's tool contains "can break searock"
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 24*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 24*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			set {searock::%player%} to number of cyan dye in player's inventory
+			set {seaheart::%player%} to number of heart of the sea in player's inventory
+			set {seablock::%player%} to number of oxidized copper in player's inventory
+			if {autocompress::%player%} is true:
+				{searockcompress::%player%} is true
+				if {searock::%player%} > 63:
+					loop 1000 times:
+						{searock::%player%} > 63
+						remove 64 of cyan dye from player's inventory 
+						set {searock::%player%} to number of cyan dye in player's inventory
+						give 1 of heart of the sea named "&7[&eTier 2&7] &3Sea Heart" to player
+				if {seaheart::%player%} > 63:
+					loop 1000 times:
+						{seaheart::%player%} > 63
+						remove 64 of heart of the sea from player's inventory 
+						set {seaheart::%player%} to number of heart of the sea in player's inventory
+						give 1 of oxidized copper named "&7[&eTier 3&7] &3Sea block" to player
+		set {jack.%player%.lastused} to now
+#---------------------------SEA ROCK--------------------------------------------------------------------------------------------
+on block break of oxidized copper:
+	if player's tool is stone pickaxe or iron pickaxe or diamond pickaxe or netherite pickaxe:
+		cancel drops
+		set event-block to bedrock
+		if name of player's tool is "&7[&a0&7] &aStart Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 2*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 2
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 2*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a1&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 2*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 8
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 3*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+8
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a2&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 16
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+16
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if name of player's tool is "&7[&a3&7] &3Searock Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 5*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 5*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if player's tool is iron pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 7*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 7*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if player's tool is diamond pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 9*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 9*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		if player's tool is netherite pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 11*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 11*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+				give {giveitem::%player%} of cyan dye named "&7[&eTier 1&7] &3searock" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &3Searock" to player
+		set {searock::%player%} to number of cyan dye in player's inventory
+		set {seaheart::%player%} to number of heart of the sea in player's inventory
+		set {seablock::%player%} to number of oxidized copper in player's inventory
+		if {autocompress::%player%} is true:
+			{searockcompress::%player%} is true		
+			if {searock::%player%} > 63:
+				loop 1000 times:
+					{searock::%player%} > 63
+					remove 64 of cyan dye from player's inventory 
+					set {searock::%player%} to number of cyan dye in player's inventory
+					give 1 of heart of the sea named "&7[&eTier 2&7] &3Sea Heart" to player
+			if {seaheart::%player%} > 63:
+				loop 1000 times:
+					{seaheart::%player%} > 63
+					remove 64 of heart of the sea from player's inventory 
+					set {seaheart::%player%} to number of heart of the sea in player's inventory
+					give 1 of oxidized copper named "&7[&eTier 3&7] &3Sea block" to player
+#-----------------------------Cooldown AND LUCKYBLOCK---------------------------------------------------------------------------
+on block break of oxidized copper:
+	set {blockbroken::%player%} to 1
+	chance of {luckychance::%player%}%:
+		set {_luckywaited::%player%} to difference between {lucky.%player%.lastused} and now
+		if {_luckywaited::%player%} is less than 30 seconds:
+			wait 40 ticks			
+			set event-block to oxidized copper
+			stop
+		wait 1 tick
+		set event-block to beacon
+		show 10 "SCRAPE" particles at location 1 block above event-block for player
+		send "{@prefix} You Found a lucky block"
+		play sound "minecraft:block.note_block.chime" at volume 3 at pitch 1 to player
+		set {lucky.%player%.lastused} to now
+	else:
+		wait 40 ticks
+		set event-block to oxidized copper
+on block break of light blue glazed terracotta:
+	set {blockbroken::%player%} to 2
+	chance of {luckychance::%player%}%:
+		set {_luckywaited1::%player%} to difference between {lucky1.%player%.lastused} and now
+		if {_luckywaited1::%player%} is less than 30 seconds:
+			wait 40 ticks
+			set event-block to light blue glazed terracotta
+			stop
+		wait 1 tick
+		set event-block to beacon
+		show 10 "SCRAPE" particles at location 1 block above event-block for player
+		send "{@prefix} You Found a lucky block"
+		play sound "minecraft:block.note_block.chime" at volume 3 at pitch 1 to player
+		set {lucky1.%player%.lastused} to now
+	else:
+		wait 40 ticks
+		set event-block to light blue glazed terracotta
+on block break of prismarine:
+	set {blockbroken::%player%} to 3
+	chance of {luckychance::%player%}%:
+		set {_luckywaited1::%player%} to difference between {lucky1.%player%.lastused} and now
+		if {_luckywaited1::%player%} is less than 30 seconds:
+			wait 40 ticks
+			set event-block to prismarine
+			stop
+		wait 1 tick
+		set event-block to beacon
+		set {blockbroken::%player%} to 3
+		show 10 "SCRAPE" particles at location 1 block above event-block for player
+		send "{@prefix} You Found a lucky block"
+		play sound "minecraft:block.note_block.chime" at volume 3 at pitch 1 to player
+		set {lucky1.%player%.lastused} to now
+	else:
+		wait 40 ticks
+		set event-block to prismarine
+on block break of packed ice:
+	set {blockbroken::%player%} to 4
+	chance of {luckychance::%player%}%:
+		set {_luckywaited1::%player%} to difference between {lucky1.%player%.lastused} and now
+		if {_luckywaited1::%player%} is less than 30 seconds:
+			wait 40 ticks
+			set event-block to packed ice
+			stop
+		wait 1 tick
+		set event-block to beacon
+		set {blockbroken::%player%} to 4
+		show 10 "SCRAPE" particles at location 1 block above event-block for player
+		send "{@prefix} You Found a lucky block"
+		play sound "minecraft:block.note_block.chime" at volume 3 at pitch 1 to player
+		set {lucky1.%player%.lastused} to now
+	else:
+		wait 40 ticks
+		set event-block to packed ice
+on block break of beacon:
+	cancel drops
+	if {blockbroken::%player%} = 1:
+		set event-block to oxidized copper
+		play sound "minecraft:entity.experience_orb.pickup" at volume 3 at pitch 1 to player
+		chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+		chance of 25%:
+			set {multigive::%player%} to random integer between 0.25 and 1
+			add {multigive::%player%} to {purchasedmultiplyer::%player%}
+			send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+		else:
+			chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+			chance of 25%:
+				set {multigive::%player%} to random integer between 0.25 and 1
+				add {multigive::%player%} to {purchasedmultiplyer::%player%}
+				send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"	
+	if {blockbroken::%player%} = 2:
+		set event-block to light blue glazed terracotta
+		play sound "minecraft:entity.experience_orb.pickup" at volume 3 at pitch 1 to player
+		chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+		chance of 25%:
+			set {multigive::%player%} to random integer between 0.25 and 1
+			add {multigive::%player%} to {purchasedmultiplyer::%player%}
+			send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+		else:
+			chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+			chance of 25%:
+				set {multigive::%player%} to random integer between 0.25 and 1
+				add {multigive::%player%} to {purchasedmultiplyer::%player%}
+				send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"	
+	if {blockbroken::%player%} = 3:
+		set event-block to prismarine
+		play sound "minecraft:entity.experience_orb.pickup" at volume 3 at pitch 1 to player
+		chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+		chance of 25%:
+			set {multigive::%player%} to random integer between 0.25 and 1
+			add {multigive::%player%} to {purchasedmultiplyer::%player%}
+			send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+		else:
+			chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+			chance of 25%:
+				set {multigive::%player%} to random integer between 0.25 and 1
+				add {multigive::%player%} to {purchasedmultiplyer::%player%}
+				send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+	if {blockbroken::%player%} = 4:
+		set event-block to packed ice
+		play sound "minecraft:entity.experience_orb.pickup" at volume 3 at pitch 1 to player
+		chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+		chance of 25%:
+			set {multigive::%player%} to random integer between 0.25 and 1
+			add {multigive::%player%} to {purchasedmultiplyer::%player%}
+			send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+		else:
+			chance of 25%:
+			set {getmoney::%player%} to random integer between 250 and 1000
+			add {getmoney::%player%} to player's balance 
+			send "{@prefix} you got %{getmoney::%player%}% Tokens from the lucky block"
+			stop
+			chance of 25%:
+				set {multigive::%player%} to random integer between 0.25 and 1
+				add {multigive::%player%} to {purchasedmultiplyer::%player%}
+				send "{@prefix} you got a %{multigive::%player%}% multiplier from the lucky block"
+#--------------------------Jackhammer waterblock--------------------------------------------------------------------------------
+command /resetwaterjack:
+	permission: *
+	trigger:
+		wait 60 ticks
+		loop all blocks in radius 1.8 around {eblockwaterblock}:
+			loop-block is bedrock
+			set loop-block to light blue glazed terracotta
+
+on block break of light blue glazed terracotta:
+	chance of {hammerchance::%player%}%:
+		set {_waited::%player%} to difference between {jack.%player%.lastused} and now
+		if {_waited::%player%} is less than 20 seconds:
+			stop
+		set event-block to bedrock
+		loop blocks in radius 1.8 around event-block:
+			if loop-block is light blue glazed terracotta:
+				player's tool is iron pickaxe
+				cancel drops
+				set loop-block to bedrock
+				set {eblockwaterblock} to event-block's location
+				execute console command "resetwaterjack"
+		if player's tool is iron pickaxe:
+			cancel drops
+			set event-block to bedrock
+			if name of player's tool is "&7[&a4&7] &bWater Pickaxe":
+				if {rebirthmultiplier::%player%} > 0:
+					set {giveitem::%player%} to 16*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 2
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+				if {rebirthmultiplier::%player%} = 0:
+					set {giveitem::%player%} to 16*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if name of player's tool is "&7[&a5&7] &bWater Pickaxe":
+				if {rebirthmultiplier::%player%} > 0:
+					set {giveitem::%player%} to 18*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+				if {rebirthmultiplier::%player%} = 0:
+					set {giveitem::%player%} to 18*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if name of player's tool is "&7[&a6&7] &bWater Pickaxe":
+				if {rebirthmultiplier::%player%} > 0:
+					set {giveitem::%player%} to 20*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+				if {rebirthmultiplier::%player%} = 0:
+					set {giveitem::%player%} to 20*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if name of player's tool is "&7[&a7&7] &bWater Pickaxe":
+				if {rebirthmultiplier::%player%} > 0:
+					set {giveitem::%player%} to 22*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+				if {rebirthmultiplier::%player%} = 0:
+					set {giveitem::%player%} to 22*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+					give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+					send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+				set {waterpixel::%player%} to number of warped button in player's inventory
+				set {mineralwater::%player%} to number of light blue dye in player's inventory
+				set {watercube::%player%} to number of light blue glazed terracotta in player's inventory
+				if {autocompress::%player%} is true:
+					{waterpixelauto::%player%} is true
+					if {waterpixel::%player%} > 63:
+						loop 1000 times:
+							{waterpixel::%player%} > 63
+							remove 64 of warped button from player's inventory 
+							set {waterpixel::%player%} to number of warped button in player's inventory
+							give 1 of light blue dye named "&7[&eTier 2&7] &bMineral Water" to player
+					if {mineralwater::%player%} > 63:
+						loop 1000 times:
+							{mineralwater::%player%} > 63
+							remove 64 of light blue dye from player's inventory 
+							set {mineralwater::%player%} to number of light blue dye in player's inventory
+							give 1 of light blue glazed terracotta named  "&7[&eTier 3&7] &bWater Cube" to player
+		set {jack.%player%.lastused} to now
+#--------------------------Water block------------------------------------------------------------------------------------------
+on block break of light blue glazed terracotta:
+	if player's tool is iron pickaxe or diamond pickaxe or netherite pickaxe:
+		cancel drops
+		set event-block to bedrock
+		if name of player's tool is "&7[&a4&7] &bWater Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 2
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		if name of player's tool is "&7[&a5&7] &bWater Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		if name of player's tool is "&7[&a6&7] &bWater Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		if name of player's tool is "&7[&a7&7] &bWater Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		set {waterpixel::%player%} to number of warped button in player's inventory
+		set {mineralwater::%player%} to number of light blue dye in player's inventory
+		set {watercube::%player%} to number of light blue glazed terracotta in player's inventory
+		if player's tool is diamond pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 6*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 6*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		if player's tool is netherite pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 10*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 10*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of warped button named "&7[&eTier 1&7] &bwater pixel" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bwater pixel" to player
+		set {waterpixel::%player%} to number of warped button in player's inventory
+		set {mineralwater::%player%} to number of light blue dye in player's inventory
+		set {watercube::%player%} to number of light blue glazed terracotta in player's inventory
+		if {autocompress::%player%} is true:
+			{waterpixelauto::%player%} is true
+			if {waterpixel::%player%} > 63:
+				loop 1000 times:
+					{waterpixel::%player%} > 63
+					remove 64 of warped button from player's inventory 
+					set {waterpixel::%player%} to number of warped button in player's inventory
+					give 1 of light blue dye named "&7[&eTier 2&7] &bMineral Water" to player
+			if {mineralwater::%player%} > 63:
+				loop 1000 times:
+					{mineralwater::%player%} > 63
+					remove 64 of light blue dye from player's inventory 
+					set {mineralwater::%player%} to number of light blue dye in player's inventory
+					give 1 of light blue glazed terracotta named  "&7[&eTier 3&7] &bWater Cube" to player			
+#-------------------------PRISMARINE---------------------------
+command /resetprisjack:
+	permission: *
+	trigger:
+		wait 60 ticks
+		loop all blocks in radius 1.8 around {eblockpris}:
+			loop-block is bedrock
+			set loop-block to prismarine
+
+on block break of prismarine:
+	chance of {hammerchance::%player%}%:
+		set {_waited::%player%} to difference between {jack.%player%.lastused} and now
+		if {_waited::%player%} is less than 20 seconds:
+			stop
+		set event-block to bedrock
+		loop blocks in radius 1.8 around event-block:
+			if loop-block is prismarine:
+				player's tool is iron pickaxe or diamond pickaxe or netherite pickaxe
+				cancel drops
+				set loop-block to bedrock
+				set {eblockpris} to event-block's location
+				execute console command "resetprisjack"
+		if player's tool is diamond pickaxe or netherite pickaxe:
+			cancel drops
+			set event-block to bedrock
+			if name of player's tool is "&7[&a8&7] &9prismarine debris Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 14*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%}+ 2
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 14*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a9&7] &9prismarine chunk Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 17*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 17*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a10&7]&9prismarine Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 20*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 20*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a11&7] &9prismarine anialator":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 22*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 22*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+		if player's tool is netherite pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 24*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 24*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		set {Prismarinedebris::%player%} to number of ghast tear in player's inventory
+		set {Prismarinechunk::%player%} to number of prismarine crystals in player's inventory
+		set {Prismarineblock::%player%} to number of prismarine in player's inventory
+		if {autocompress::%player%} is true:
+			{prismarineauto::%player%} is true
+			if {Prismarinedebris::%player%} > 63:
+				loop 1000 times:
+					{Prismarinedebris::%player%} > 63
+					remove 64 of ghast tear from player's inventory 
+					set {Prismarinedebris::%player%} to number of ghast tear in player's inventory
+					give 1 of prismarine crystals named "&7[&eTier 2&7] &9Prismarine chunk" to player
+			if {Prismarinechunk::%player%} > 63:
+				loop 1000 times:
+					{Prismarinechunk::%player%} > 63
+					remove 64 of prismarine crystals from player's inventory 
+					set {Prismarinechunk::%player%} to number of prismarine crystals in player's inventory
+					give 1 of prismarine named  "&7[&eTier 3&7] &9prismarine block" to player	
+		set {jack.%player%.lastused} to now
+on rightclick holding book:
+	if name of player's tool is "&9prismarine comp":
+		{prismarineauto::%player%} is not set
+		set {prismarineauto::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you can now autocompress prismarine"
+#-----------prismarine--------------------------------------------------------------------------------------------------------				
+on block break of prismarine:
+	if player's tool is diamond pickaxe or netherite pickaxe:
+		cancel drops
+		set event-block to bedrock
+		if name of player's tool is "&7[&a8&7] &9prismarine debris Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%}+ 2
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a9&7] &9prismarine chunk Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a10&7]&9prismarine Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		if name of player's tool is "&7[&a11&7] &9prismarine anialator":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+		if player's tool is netherite pickaxe:
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 6*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 6*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of ghast tear named "&7[&eTier 1&7] &9Prismarine debris" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &9Prismarine debris" to player
+		set {Prismarinedebris::%player%} to number of ghast tear in player's inventory
+		set {Prismarinechunk::%player%} to number of prismarine crystals in player's inventory
+		set {Prismarineblock::%player%} to number of prismarine in player's inventory
+		if {autocompress::%player%} is true:
+			{prismarineauto::%player%} is true
+			if {Prismarinedebris::%player%} > 63:
+				loop 1000 times:
+					{Prismarinedebris::%player%} > 63
+					remove 64 of ghast tear from player's inventory 
+					set {Prismarinedebris::%player%} to number of ghast tear in player's inventory
+					give 1 of prismarine crystals named "&7[&eTier 2&7] &9Prismarine chunk" to player
+			if {Prismarinechunk::%player%} > 63:
+				loop 1000 times:
+					{Prismarinechunk::%player%} > 63
+					remove 64 of prismarine crystals from player's inventory 
+					set {Prismarinechunk::%player%} to number of prismarine crystals in player's inventory
+					give 1 of prismarine named  "&7[&eTier 3&7] &9prismarine block" to player	
+on rightclick holding book:
+	if name of player's tool is "&9prismarine comp":
+		send "{@prefix} you can now autocompress prismarine"
+		{prismarineauto::%player%} is not set
+		set {prismarineauto::%player%} to true
+		remove 1 of player's tool from player
+#--------------Packed ice--------------------------------------
+on rightclick holding book:
+	if name of player's tool is "&b&lICE AUTO COMPRESS":
+		{iceauto::%player%} is not set
+		set {iceauto::%player%} to true
+		send "{@prefix} you can now autocompress prismarine"
+		remove 1 of player's tool from player
+on block break of packed ice:
+	if player's tool is netherite pickaxe:
+		cancel drops
+		set event-block to bedrock
+		if name of player's tool is "&7[&a12&7] &bice crystal pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%}+ 2
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a13&7] &bicicle Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a14&7] &bice breaker Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a15&7] &bice crusher":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 4*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 4*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		set {icecrystals::%player%} to number of blue dye in player's inventory
+		set {icechunk::%player%} to number of diamond in player's inventory
+		set {iceblock::%player%} to number of blue ice in player's inventory
+		if {autocompress::%player%} is true:
+			{iceauto::%player%} is true
+			if {icecrystals::%player%} > 63:
+				loop 1000 times:
+					{icecrystals::%player%} > 63
+					remove 64 of blue dye from player's inventory 
+					set {icecrystals::%player%} to number of blue dye in player's inventory
+					give 1 of diamond named "&7[&eTier 2&7] &bice chunk" to player
+			if {icechunk::%player%} > 63:
+				loop 1000 times:
+					{icechunk::%player%} > 63
+					remove 64 of diamond from player's inventory 
+					set {icechunk::%player%} to number of diamond in player's inventory
+					give 1 of blue ice named  "&7[&eTier 3&7] &bice" to player	
+#----------------------PACKED ICE JACK----------------------------------------------------------------------------------------
+command /reseticejack:
+	permission: *
+	trigger:
+		wait 60 ticks
+		loop all blocks in radius 1.8 around {eblockice}:
+			loop-block is bedrock
+			set loop-block to packed ice
+
+on block break of packed ice:
+	chance of {hammerchance::%player%}%:
+		set {_waited::%player%} to difference between {jack.%player%.lastused} and now
+		if {_waited::%player%} is less than 20 seconds:
+			stop
+		set event-block to bedrock
+		loop blocks in radius 1.8 around event-block:
+			if loop-block is packed ice:
+				player's tool is netherite pickaxe
+				cancel drops
+				set loop-block to bedrock
+				set {eblockice} to event-block's location
+				execute console command "reseticejack"
+		if player's tool is netherite pickaxe:
+			cancel drops
+			set event-block to bedrock
+			if name of player's tool is "&7[&a12&7] &bice crystal pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 12*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%}+ 2
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 12*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+2
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a13&7] &bicicle Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 14*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 6
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 14*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+6
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a14&7]&bice breaker Pickaxe":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 16*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 12
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 16*{purchasedmultiplyer::%player%} + {multiplyer::%player%}+12
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		if name of player's tool is "&7[&a15&7] &bice crusher":
+			if {rebirthmultiplier::%player%} > 0:
+				set {giveitem::%player%} to 18*{rebirthmultiplier::%player%}*{purchasedmultiplyer::%player%} + {multiplyer::%player%} + 20
+				give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+				send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+			if {rebirthmultiplier::%player%} = 0:
+				set {giveitem::%player%} to 18 *{purchasedmultiplyer::%player%} + {multiplyer::%player%}+20
+			give {giveitem::%player%} of blue dye named "&7[&eTier 1&7] &bice crystal" to player
+			send action bar "&7[&e+%{giveitem::%player%}%&7] &bice crystal" to player
+		set {icecrystals::%player%} to number of blue dye in player's inventory
+		set {icechunk::%player%} to number of diamond in player's inventory
+		set {iceblock::%player%} to number of blue ice in player's inventory
+		if {autocompress::%player%} is true:
+			{iceauto::%player%} is true
+			if {icecrystals::%player%} > 63:
+				loop 1000 times:
+					{icecrystals::%player%} > 63
+					remove 64 of blue dye from player's inventory 
+					set {icecrystals::%player%} to number of blue dye in player's inventory
+					give 1 of diamond named "&7[&eTier 2&7] &bice chunk" to player
+			if {icechunk::%player%} > 63:
+				loop 1000 times:
+					{icechunk::%player%} > 63
+					remove 64 of diamond from player's inventory 
+					set {icechunk::%player%} to number of diamond in player's inventory
+					give 1 of blue ice named  "&7[&eTier 3&7] &bice" to player				
+		set {jack.%player%.lastused} to now
+#-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+on block break:
+	if player's gamemode is survival:
+		if player's tool is stone pickaxe:
+			if event-block is not oxidized copper:
+				cancel event
+		if player's tool is air:
+			cancel event
+		
+command /shinyize <player>:
+	trigger:
+		set {shiny} to arg-1's tool
+		give arg-1 1 of shiny {shiny}
+		
+		
+#---------------------------COIN FLIP------------------------------------------------------------------------------------------		
+command /moneymake:
+	trigger:
+		set metadata tag "gamble" of player to chest inventory with 3 rows named "&6&lMoneymaker"
+		set slot (integers between 0 and 26) of metadata tag "gamble" of player to gray stained glass pane named "&7"
+		set slot 10 of (metadata tag "gamble" of player) to gold nugget named "&6&lCoin Flip" with lore "&7" and "&750/50 chance to win or lose"
+		open (metadata tag "gamble" of player) to player
+		
+on inventory click:
+	if event-inventory is (metadata tag "gamble" of player):
+		cancel event
+		if index of event-slot is 10:
+			close player's inventory
+			send "{@prefix} please type /coinflip <integer> in chat"
+
+command /coinflip <integer>:
+	trigger:
+		if arg-1 > 49:
+			if player's balance is greater than or equal to arg-1:
+				set metadata tag "coinflipdetect" of player to chest inventory with 3 rows named "&eCoin flip"
+				set slot (integers between 0 and 26) of metadata tag "coinflipdetect" of player to gray stained glass pane named "&7"
+				set slot 11 of (metadata tag "coinflipdetect" of player) to skull of player named "&cHeads"
+				set slot 15 of (metadata tag "coinflipdetect" of player) to rabbit's foot named "&cTails"
+				set slot 13 of (metadata tag "coinflipdetect" of player) to golden ingot named "&7Betting (&e⛁%arg-1%&7)"
+				open (metadata tag "coinflipdetect" of player) to player
+				set {bettingmoney::%player%} to arg-1 
+			else:
+				send "{@prefix} &cyou dont have that many tokens to coinflip"
+		else:
+			send "{@prefix} &cyou need to flip 50 coins or more to coinflip"
+		
+		
+on inventory click:
+	if event-inventory is (metadata tag "coinflipdetect" of player):
+		cancel event
+		if index of event-slot is 11:
+			{heads::%player%} is not set
+			set {heads::%Player%} to true
+			send "{@prefix} you have chosen heads"
+			wait 15 ticks
+			set metadata tag "coinflip1" of player to chest inventory with 3 rows named "&eCoin flip"
+			set slot (integers between 0 and 26) of metadata tag "coinflip1" of player to gray stained glass pane named "&7"
+			set slot 4 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			open (metadata tag "coinflip1" of player) to player
+			wait 10 ticks
+			set slot 4 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 13 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 10 ticks
+			set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 10 ticks
+			set slot 22 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 13 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 20 ticks
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {heads::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{tails::%player%} is true
+					play sound "minecraft:entity.villager.trade" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {tails::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{heads::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			else:
+				chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {heads::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{tails::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {tails::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{heads::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%}
+				clear {heads::%player%}
+		if index of event-slot is 15:
+			{tails::%player%} is not set
+			set {tails::%Player%} to true
+			send "{@prefix} you have chosen tails"
+			wait 10 ticks
+			set metadata tag "coinflip1" of player to chest inventory with 3 rows named "&eCoin flip"
+			set slot (integers between 0 and 26) of metadata tag "coinflip1" of player to gray stained glass pane named "&7"
+			set slot 4 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			open (metadata tag "coinflip1" of player) to player
+			wait 10 ticks
+			set slot 4 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 13 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 10 ticks
+			set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 10 ticks
+			set slot 22 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+			set slot 13 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+			play sound "minecraft:block.note_block.bit" at volume 3 at pitch 1 to player
+			wait 20 ticks
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {heads::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{tails::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {tails::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{heads::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 20 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			else:
+				chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to skull of player named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {heads::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained %{wonamount::%player%}% tokens"
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+					add {wonamount::%player%} to player's balance
+				else:
+					{tails::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 10 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+			chance of 50%:
+				set slot 13 of (metadata tag "coinflip1" of player) to gray stained glass pane named "&7"
+				set slot 22 of (metadata tag "coinflip1" of player) to rabbit's foot named "&ebetting ⛁%{bettingmoney::%player%}%"
+				if {tails::%player%} is true:
+					set {wonamount::%player%} to {bettingmoney::%player%} + {bettingmoney::%player%}
+					send "{@prefix} you won and gained ⛁%{wonamount::%player%}% tokens"
+					add {wonamount::%player%} to player's balance
+					play sound "minecraft:entity.player.levelup" at volume 3 at pitch 1 to player
+				else:
+					{heads::%player%} is true
+					play sound "minecraft:block.note_block.bass" at volume 3 at pitch 1 to player
+					send "{@prefix} &cyou lost ⛁%{bettingmoney::%player%}%"
+				wait 10 ticks
+				close player's inventory 
+				clear {tails::%player%} 
+				clear {heads::%player%}
+	
+command /testcoin:
+	trigger:
+		send "%{coinflip::%player%}%"
+command /clearcoin:
+	trigger:
+		clear {coinflip::%Player%}
+#----------------------------BANK NOTES----------------------------------------------------------------------------------------		
+command /withdraw <integer>:
+	trigger:
+		arg-1 is set
+		give player 1 of shiny book named "&a&lBankote | ⛁%arg-1%"
+		remove arg-1 from player's balance
+		send "{@prefix} ⛁%arg-1% has been reducted from your account"
+on rightclick holding book:
+	set {_amount::*} to name of the player's held item split at "⛁"
+	add {_amount::2} to player's balance
+	send "{@prefix} ⛁%{_amount::2}% has been added to your account"
+	remove 1 of held item from player
+	play sound "minecraft:entity.experience_orb.pickup" at volume 3 at pitch 1 to player
+#---------------------------LUCKYBLOCK FINDER-----------------------------------------------------------------------------------
+on drop of wooden pickaxe or stone pickaxe or iron pickaxe or diamond pickaxe or golden pickaxe or netherite pickaxe:
+	cancel event
+on item damage:
+    cancel event
+on click on black shulker box:
+	send "&d&kfoeoijefoisejf"
+	teleport player to {currentpos}
+command /set?:
+	permission: *
+	trigger:
+		set {currentpos} to player's location
+		send "%{currentpos}%"
+		
+command freepet:
+	permission: *
+	trigger:
+		create a hologram at location of player with the id "clickable"
+		add line "{@color}Click me for a free pet!" to the hologram with id "clickable"
+		add line "{@color}note this will not give any perks!" to the hologram with id "clickable"
+		make line 1 of the hologram with id "clickable" clickable
+on holo touch:
+		send "a"
+			

@@ -1,0 +1,1833 @@
+variables:
+	{tigermultiplier::%player%} = 0
+	{petlisted::%player%} = 0
+	{multipets::%player%} = 0 
+	{pet1::%player%} = 0
+	{petchance::%player%} = 0
+	{turtlechance::%player%} = 0
+	{_eggbet::%player%} = 0
+
+options:
+	prefix: &7[§x§4§d§c§8§a§3&lPETS&7]
+	error: &7[&c&lERROR&7]
+	turtle: &7chance to find pets while mining
+	color: §x§4§d§c§8§a§3
+on block break:
+	if player's gamemode is survival:
+		if event-block is not oxidized copper or light blue glazed terracotta:
+			cancel event
+command clearallpets:
+	trigger:
+		kill all armor stands in radius 20 around player
+		send "a"
+command /petlist <text> [<text>]:
+	permission: *
+	trigger:
+		if arg-1 is "help":
+			send "{@prefix}&m                                                                    "
+			send "{@prefix} this adds the pets you can right click to activate"
+			send "{@prefix} NOTE only use if you have console"
+			send "{@prefix}&m                                                                    "
+		if arg-1 is "add":
+			if arg-2 is not set:
+				send "{@error}&c&m                                                                    "
+				send "{@error} &cyou need to add a name of the pet first"
+				send "{@error}&c&m                                                                    "
+			if arg-2 is set:
+				add arg-2 to {petlist::*}
+				send "{@prefix}&m                                                                    "
+				send "{@prefix} you have added %arg-2% to the petlist"
+				send "{@prefix}&m                                                                    "
+		if arg-1 is "list":
+			send "{@prefix}&m                                                                    "
+			send "{@prefix} %{petlist::*}%"
+			send "{@prefix}&m                                                                    "
+		if arg-1 is "remove":
+			if arg-2 is not set:
+				send "{@error}&c&m                                                                    "
+				send "{@error} &cyou need to add a name of the pet first"
+				send "{@error}&c&m                                                                    "
+			if arg-2 is set:
+				{petlist::*} contains arg-2
+				remove arg-2 from {petlist::*}
+				send "{@prefix}&m                                                                    "
+				send "{@prefix} you have removed %arg-2% from the list"
+				send "{@prefix}&m                                                                     "
+on tab complete:
+    event-string is "/petlist"
+    set tab completions for position 1 to "help", "add", "list" and "remove"
+command /cleardolphinp:
+	trigger:
+		clear {owndolphin::%player%}
+		clear {activecommondolphin::%player%}
+		clear {petactive::%player%}
+		clear {ownuncommondolphin::%player%}
+		clear {uncommonPetactive::%player%}
+		clear {activeuncommondolphin::%player%}
+		clear {ownraredolphin::%player%}
+		clear {activeraredolphin::%player%}
+		clear {rarePetactive::%player%}
+		clear {ownepicdolphin::%player%}
+		clear {epicPetactive::%player%}
+		clear {activeepicdolphin::%player%}
+		clear {legendaryPetactive::%player%}
+		clear {ownlegendarydolphin::%player%}
+		clear {activelegendarydolphin::%player%}
+		clear {anypetactive::%player%}
+		clear {activecommoncrab::%player%}
+		clear {commonpetactive::%player%}
+		clear {owncrab::%player%}
+		clear {commoncrabactive::%player%}
+		clear {ownuncommoncrab::%player%}
+		clear {activeuncommoncrab::%player%}
+		clear {uncommoncrabpetactive::%player%}
+		clear {ownrarecrab::%player%}
+		clear {activerarecrab::%player%}
+		clear {rarecrabpetactive::%player%}
+		clear {owncommoncrab::%player%}
+		clear {ownepiccrab::%player%}
+		clear {activeepiccrab::%player%}
+		clear {activeepiccrab::%player%}
+		clear {ownlegendarycrab::%player%}
+		clear {activelegendarycrab::%player%}
+		clear {legendarycrabpetactive::%player%}
+		clear {ownepiccrab::%Player%}
+		clear {epiccrabpetactive::%player%}
+		clear {owncommonturtle::%player%}
+		clear {activecommonturtle::%player%}
+		clear {commonturtlepetactive::%player%}
+		clear {ownuncommonturtle::%player%}
+		clear {activeuncommonturtle::%player%}
+		clear {uncommonturtlepetactive::%player%}
+		clear {ownrareturtle::%player%}
+		clear {activerareturtle::%player%}
+		clear {rareturtlepetactive::%player%}
+		clear {ownepicturtle::%player%}
+		clear {activeepicturtle::%player%}
+		clear {epicturtlepetactive::%player%}
+		clear {ownlegendaryturtle::%player%}
+		clear {activelegendaryturtle::%player%}
+		clear {legendaryturtlepetactive::%player%}
+on disconnect:
+	execute player command "petstop"
+	clear {activerarecrab::%player%}
+	clear {rarecrabpetactive::%player%}
+	clear {uncommoncrabpetactive::%player%}
+	clear {activeuncommoncrab::%player%}
+	clear {commoncrabactive::%player%}
+	clear {commonpetactive::%player%}
+	clear {activecommoncrab::%player%}
+	clear {activelegendarydolphin::%player%}
+	clear {legendaryPetactive::%player%}
+	clear {activeepicdolphin::%player%}
+	clear {epicPetactive::%player%}
+	clear {rarePetactive::%player%}
+	clear {activeraredolphin::%player%} 
+	clear {activeuncommondolphin::%player%}
+	clear {uncommonPetactive::%player%}
+	clear {petactive::%player%}
+	clear {activecommondolphin::%player%}
+	clear {activeepiccrab::%player%}
+	clear {epiccrabpetactive::%player%}
+	clear {legendarycrabpetactive::%player%}
+	clear {activelegendarycrab::%player%}
+	clear {epiccrabpetactive::%player%}
+	clear {activecommonturtle::%player%}
+	clear {commonturtlepetactive::%player%}
+	clear {activeuncommonturtle::%player%}
+	clear {activerareturtle::%player%}
+	clear {rareturtlepetactive::%player%}
+	clear {activeepicturtle::%player%}
+	clear {epicturtlepetactive::%player%}
+	clear {activelegendaryturtle::%player%}
+	clear {legendaryturtlepetactive::%player%}
+	if {petjoinmessage::%player%} is not set:
+		set {petjoinmessage::%player%} to true
+on join:
+	if {petjoinmessage::%player%} is true:
+		wait 20 ticks
+		send "{@prefix} your pets have been disabeld while you were away please type /pets to re equip them"
+		clear {petjoinmessage::%player%}
+	
+on right click:
+	if name of player's tool contains "common dolphin":
+		{owndolphin::%player%} is not set
+		{Petactive::%player%} is not set
+		{activecommondolphin::%player%} is not set
+		set {owndolphin::%player%} to true
+		set {petactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "uncommondolphin":
+		{ownuncommondolphin::%player%} is not set
+		{uncommonPetactive::%player%} is not set
+		{activeuncommondolphin::%player%} is not set
+		set {ownuncommondolphin::%player%} to true
+		set {uncommonPetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "rare dolphin":
+		{ownraredolphin::%player%} is not set
+		{activeraredolphin::%player%} is not set
+		{rarePetactive::%player%} is not set
+		set {ownraredolphin::%player%} to true
+		set {rarePetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "epic dolphin":
+		{ownepicdolphin::%player%} is not set
+		{epicPetactive::%player%} is not set
+		{activeepicdolphin::%player%} is not set
+		set {ownepicdolphin::%player%} to true
+		set {epicPetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "Legendary dolphin":
+		{ownlegendarydolphin::%player%} is not set
+		{legendaryPetactive::%player%} is not set
+		{activelegendarydolphin::%player%} is not set
+		set {ownlegendarydolphin::%player%} to true
+		set {legendaryPetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "common crab":
+		{owncrab::%player%} is not set
+		{commoncrabpetactive::%player%} is not set
+		{activecommoncrab::%player%} is not set
+		set {owncommoncrab::%player%} to true
+		set {commoncrabactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "uncommoncrab":
+		{ownuncommoncrab::%player%} is not set
+		{activeuncommoncrab::%player%} is not set
+		{uncommoncrabpetactive::%player%} is not set
+		set {ownuncommoncrab::%player%} to true
+		set {uncommoncrabpetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet equipped"
+	if name of player's tool contains "rare crab":
+		{ownrarecrab::%player%} is not set
+		{activerarecrab::%player%} is not set
+		{rarecrabpetactive::%player%} is not set
+		set {ownrarecrab::%player%} to true
+		set {rarecrabpetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	if name of player's tool contains "epic crab":
+		broadcast "a"
+		{ownepiccrab::%player%} is not set
+		broadcast "a"
+		{activeepiccrab::%player%} is not set
+		broadcast "a"
+		{epiccrabpetactive::%player%} is not set
+		broadcast "a"
+		set {ownepiccrab::%player%} to true
+		set {epiccrabpetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	if name of player's tool contains "legendary crab":
+		{ownlegendarycrab::%player%} is not set
+		{activelegendarycrab::%player%} is not set
+		{legendarycrabpetactive::%player%} is not set
+		set {ownlegendarycrab::%player%} to true
+		set {legendarycrabpetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	if name of player's tool contains "common turtle":
+		{owncommonturtle::%player%} is not set
+		{activecommonturtle::%player%} is not set
+		{commonturtlepetactive::%player%} is not set
+		set {owncommonturtle::%player%} to true
+		set {commonturtlepetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	if name of player's tool contains "uncommonturtle":
+		{ownuncommonturtle::%player%} is not set
+		{activeuncommonturtle::%player%} is not set
+		{uncommonturtlepetactive::%player%} is not set
+		set {ownuncommonturtle::%player%} to true
+		set {uncommonturtlepetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	#RARE TURTLE
+	if name of player's tool contains "rare turtle":
+		{ownrareturtle::%player%} is not set
+		{activerareturtle::%player%} is not set
+		{rareturtlepetactive::%player%} is not set
+		set {ownrareturtle::%player%} to true
+		set {rareturtlepetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	#EPIC TURTLE
+	if name of player's tool contains "epic turtle":
+		{ownepicturtle::%player%} is not set
+		{activeepicturtle::%player%} is not set
+		{epicturtlepetactive::%player%} is not set
+		set {ownepicturtle::%player%} to true
+		set {epicturtlepetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	if name of player's tool contains "legendary turtle":
+		{ownlegendaryturtle::%player%} is not set
+		{activelegendaryturtle::%player%} is not set
+		{legendaryturtlepetactive::%player%} is not set
+		set {ownlegendaryturtle::%player%} to true
+		set {legendaryturtlepetactive::%player%} to true
+		remove 1 of player's tool from player
+		send "{@prefix} you have a new pet eqipped"
+	stop
+command /clearpets:
+	permission: *
+	trigger:
+		clear {pet1::%player%}
+		clear {petlisted::%player%} 
+command /pets:
+	trigger:
+		set metadata tag "petstest" of player to chest inventory with 1 rows named "&b&lPETS"
+		set slot (integers between 0 and 8) of metadata tag "petstest" of player to light blue stained glass pane named "&7"
+		set slot 0 of (metadata tag "petstest" of player) to skull of "richstain" parsed as offline player named "&7[&f&lDolphin&7]" with lore "&7" and "&7click to see all Dolphin pets"
+		set slot 2 of (metadata tag "petstest" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&c&lCRAB&7]" with lore "&7" and "&7Click to see all crab pets"
+		set slot 4 of (metadata tag "petstest" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "&7Click to see all turtle pets"
+		set slot 8 of (metadata tag "petstest" of player) to skull of player named "&7[&b&lCUSTOM PET&7]" with lore "&7" and "&7need custom pet permission to use"
+		open (metadata tag "petstest" of player) to player
+on inventory click:
+	if event-inventory is (metadata tag "petstest" of player):
+		cancel event
+		if index of event-slot is 8:	
+			if player has permission "custompet.use":
+				execute player command "petcustomsummon"
+				close player's inventory
+on inventory click:
+	if event-inventory is (metadata tag "petstest" of player):
+		cancel event
+		if index of event-slot is 0:
+			set metadata tag "dolphin" of player to chest inventory with 1 rows named "&b&lPETS"
+			set slot (integers between 0 and 8) of metadata tag "dolphin" of player to light blue stained glass pane named "&7"	
+			if {activecommondolphin::%player%} is not set:
+				set slot 0 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&f&lDolphin&7]" with lore "&7" and "&7Gives a 1 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&f&lCOMMON"
+			else:
+				
+				set slot 0 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&f&lDolphin&7]" with lore "&7" and "&7Gives a 1 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+			if {activeuncommondolphin::%player%} is not set:
+				set slot 2 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+			else:
+				set slot 2 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+			if {activeraredolphin::%player%} is not set:
+				set slot 4 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&9&lDolphin&7]" with lore "&7" and "&7Gives a 5 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+			else:
+				set slot 4 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&9&lDolphin&7]" with lore "&7" and "&7Gives a 5 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+			if {activeraredolphin::%player%} is not set:
+				set slot 6 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&5&lDolphin&7]" with lore "&7" and "&7Gives a 7 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+			else:
+				set slot 6 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&5&lDolphin&7]" with lore "&7" and "&7Gives a 7 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+			if {activelegendarydolphin::%player%} is not set:
+				set slot 8 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&6&lDolphin&7]" with lore "&7" and "&7Gives a 10 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+			else:
+				set slot 8 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&6&lDolphin&7]" with lore "&7" and "&7Gives a 10 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+			open (metadata tag "dolphin" of player) to player
+		if index of event-slot is 2:
+			set metadata tag "crab" of player to chest inventory with 1 rows named "&b&lPETS"
+			set slot (integers between 0 and 8) of metadata tag "crab" of player to orange stained glass pane named "&7"	
+			if {activecommoncrab::%player%} is not set:
+				set slot 0 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&f&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&f&lCOMMON"
+			else:
+				set slot 0 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&f&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+			if {activeuncommoncrab::%player%} is not set:
+				set slot 2 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&a&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+			else:
+				set slot 2 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&a&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+			if {activerarecrab::%player%} is not set:
+				set slot 4 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&9&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+			else:
+				set slot 4 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&9&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+			if {activeepiccrab::%player%} is not set:
+				set slot 6 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&5&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+			else:
+				set slot 6 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&5&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+			if {activelegendarycrab::%player%} is not set:
+				set slot 8 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&6&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+			else:
+				set slot 8 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&6&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"		
+			open (metadata tag "crab" of player) to player
+		if index of event-slot is 4:
+			set metadata tag "turtle" of player to chest inventory with 1 rows named "&b&lPETS"
+			set slot (integers between 0 and 8) of metadata tag "turtle" of player to lime stained glass pane named "&7"	
+			if {activecommonturtle::%player%} is not set:
+				set slot 0 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&f&lCOMMON"
+			else:
+				set slot 0 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+			if {activeuncommonturtle::%player%} is not set:
+				set slot 2 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+			else:
+				set slot 2 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+			if {activerareturtle::%player%} is not set:
+				set slot 4 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+			else:
+				set slot 4 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+			if {activeepicturtle::%player%} is not set:
+				set slot 6 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+			else:
+				set slot 6 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+			if {activelegendaryturtle::%player%} is not set:
+				set slot 8 of (metadata tag "turtle" of player) to skull of "Rubylogs" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+			else:
+				set slot 8 of (metadata tag "turtle" of player) to skull of "Rubylogs" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+			open (metadata tag "turtle" of player) to player
+command /testpets:
+	trigger:
+		send "%{multipets::%player%}%, %{pet1::%player%}%, %{commonturtledeactive1::%player%}%, %{commonturtledeactive2::%player%}%, %{commonturtledeactive3::%player%}%"
+command /clearmultipetaccessability:
+	permission: *
+	trigger:
+		clear {multipets::%player%}
+		clear {pet1::%player%}
+		clear {commonturtledeactive1::%player%}
+		clear {commonturtledeactive2::%player%}
+		clear {commonturtledeactive3::%player%}
+		clear {rareturtledeactive1::%player%}
+		clear {rareturtledeactive2::%player%}
+		clear {rareturtledeactive3::%player%}
+		clear {epicturtledeactive1::%player%}
+		clear {epicturtledeactive2::%player%}
+		clear {epicturtledeactive3::%player%}
+#-----------------TURTLE PET--------------------------------------------------------------------------------------------------
+on inventory click:
+	if event-inventory is (metadata tag "turtle" of player):
+		cancel event
+		if index of event-slot is 0:
+			if {owncommonturtle::%player%} is true:
+				if {activecommonturtle::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 0 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+							set {activecommonturtle::%player%} to true
+							spawnPet(player, "83chacha", "&7[&f&lCOMMON&7] &a%player%'s Turtle")
+							add 0.5 to {turtlechance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 0.5 to {turtlechance::%player%}
+							set slot 0 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+							set {activecommonturtle::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "83chacha", "&7[&f&lCOMMON&7] &a%player%'s TRUTLE")
+								add 1 to {pet1::%player%}
+								{commonturtledeactive1::%player%} is not set
+								set {commonturtledeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "83chacha", "&7[&f&lCOMMON&7] &a%player%'s TURTLE")
+								add 1 to {pet1::%player%}
+								{commonturtledeactive1::%player%} is not set
+								set {commonturtledeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "83chacha", "&7[&f&lCOMMON&7] &a%player%'s TURTLE")
+								{commonturtledeactive1::%player%} is not set
+								set {commonturtledeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activecommonturtle::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 0 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&f&lCOMMON"
+						set {_u} to player's uuid
+						if {commonturtledeactive1::%player%} is true:
+							clear {commonturtledeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {commonturtledeactive1::%player%}
+						if {commonturtledeactive2::%player%} is true:
+							clear {commonturtledeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {commonturtledeactive3::%player%} is true:
+							clear {commonturtledeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activecommonturtle::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {turtlechance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#-----------------UNCOMMON TURTLE------------------------------
+		if index of event-slot is 2:
+			if {ownuncommonturtle::%player%} is true:
+				if {activeuncommonturtle::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 2 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommonturtle::%player%} to true
+							spawnPet(player, "83chacha", "&7[&a&lUNCOMMON&7] &a%player%'s Turtle")
+							add 1 to {turtlechance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {turtlechance::%player%}
+							set slot 2 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommonturtle::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "83chacha", "&7[&a&lUNCOMMON&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								{uncommonturtledeactive1::%player%} is not set
+								set {uncommonturtledeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "83chacha", "&7[&a&lUNCOMMON&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								{uncommonturtledeactive1::%player%} is not set
+								set {uncommonturtledeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "83chacha", "&7[&a&lUNCOMMON&7] &a%player%'s Turtle")
+								{uncommonturtledeactive1::%player%} is not set
+								set {uncommonturtledeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeuncommonturtle::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 2 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+						set {_u} to player's uuid
+						if {uncommonturtledeactive1::%player%} is true:
+							clear {uncommonturtledeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {uncommonturtledeactive1::%player%}
+						if {uncommonturtledeactive2::%player%} is true:
+							clear {uncommonturtledeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {uncommonturtledeactive3::%player%} is true:
+							clear {uncommonturtledeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeuncommonturtle::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {turtlechance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#-----------------------RARE TURTLE----------------------------
+		if index of event-slot is 4:
+			if {ownrareturtle::%player%} is true:
+				if {activerareturtle::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 4 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activerareturtle::%player%} to true
+							spawnPet(player, "83chacha", "&7[&9&lRARE&7] &a%player%'s Turtle")
+							add 1 to {turtlechance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {turtlechance::%player%}
+							set slot 4 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activerareturtle::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "83chacha", "&7[&9&lRARE&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {rareturtledeactive1::%player%} is not set:
+									set {rareturtledeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "83chacha", "&7[&9&lRARE&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {rareturtledeactive1::%player%} is not set:
+									set {rareturtledeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "83chacha", "&7[&9&lRARE&7] &a%player%'s Turtle")
+								if {rareturtledeactive1::%player%} is not set:
+									set {rareturtledeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activerareturtle::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 4 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+						set {_u} to player's uuid
+						if {rareturtledeactive1::%player%} is true:
+							clear {rareturtledeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {rareturtledeactive1::%player%}
+						if {rareturtledeactive2::%player%} is true:
+							clear {rareturtledeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {rareturtledeactive3::%player%} is true:
+							clear {rareturtledeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activerareturtle::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {turtlechance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#---------------------EPIC TURTLE------------------------------
+		if index of event-slot is 6:
+			if {ownepicturtle::%player%} is true:
+				if {activeepicturtle::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 6 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepicturtle::%player%} to true
+							spawnPet(player, "83chacha", "&7[&5&lEPIC&7] &a%player%'s Turtle")
+							add 1 to {turtlechance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {turtlechance::%player%}
+							set slot 6 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepicturtle::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "83chacha", "&7[&5&lEPIC&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {epicturtledeactive1::%player%} is not set:
+									set {epicturtledeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "83chacha", "&7[&5&lEPIC&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {epicturtledeactive2::%player%} is not set:
+									set {epicturtledeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "83chacha", "&7[&5&lEPIC&7] &a%player%'s Turtle")
+								if {epicturtledeactive3::%player%} is not set:
+									set {epicturtledeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeepicturtle::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 6 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+						set {_u} to player's uuid
+						if {epicturtledeactive1::%player%} is true:
+							clear {epicturtledeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {epicturtledeactive1::%player%}
+						if {epicturtledeactive2::%player%} is true:
+							clear {epicturtledeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {epicturtledeactive3::%player%} is true:
+							clear {epicturtledeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeepicturtle::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {turtlechance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#--------------------------LEGENDARY TURTLE--------------------
+		if index of event-slot is 8:
+			if {ownlegendaryturtle::%player%} is true:
+				if {activelegendaryturtle::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 8 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendaryturtle::%player%} to true
+							spawnPet(player, "83chacha", "&7[&6&lLEGENDARY&7] &a%player%'s Turtle")
+							add 1 to {turtlechance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {turtlechance::%player%}
+							set slot 8 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendaryturtle::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "83chacha", "&7[&6&lLEGENDARY&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {legendaryturtledeactive1::%player%} is not set:
+									set {legendaryturtledeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "83chacha", "&7[&6&lLEGENDARY&7] &a%player%'s Turtle")
+								add 1 to {pet1::%player%}
+								if {legendaryturtledeactive2::%player%} is not set:
+									set {legendaryturtledeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "83chacha", "&7[&6&lLEGENDARY&7] &a%player%'s Turtle")
+								if {legendaryturtledeactive3::%player%} is not set:
+									set {legendaryturtledeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activelegendaryturtle::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 8 of (metadata tag "turtle" of player) to skull of "83chacha" parsed as offline player named "&7[&a&lTURTLE&7]" with lore "&7" and "{@turtle}" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+						set {_u} to player's uuid
+						if {legendaryturtledeactive1::%player%} is true:
+							clear {legendaryturtledeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {legendaryturtledeactive1::%player%}
+						if {legendaryturtledeactive2::%player%} is true:
+							clear {legendaryturtledeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {legendaryturtledeactive3::%player%} is true:
+							clear {legendaryturtledeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activelegendaryturtle::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {turtlechance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#-------------------TURTLE COMMANDS---------------------------
+on block break:
+	chance of {turtlechance::%player%}%:
+		give 1 of shiny turtle egg named "&7[&f&lCRACKED EGG SHELL&7]" with lore "&7" and "&764 cracked egg shell's = 1 egg shell" and "&7" and "&78 egg shell's = 1 good egg shell" and "&7" and "&74 good egg shell's = 1 great egg shell" and "&7" and "&72 greate egg shell's = 1 spectacular egg shell" to player
+command /clearturtlechance:
+	permission: *
+	trigger:
+		clear {turtlechance::%player%}
+
+#-------------------------------DOLPHIN PET-----------------------------------------------------------------------------------
+on inventory click:
+	if event-inventory is (metadata tag "dolphin" of player):
+		cancel event
+		if index of event-slot is 0:
+			if {owndolphin::%player%} is true:
+				if {activecommondolphin::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 0 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+							set {activecommondolphin::%player%} to true
+							spawnPet(player, "richstain", "&7[&f&lCOMMON&7] &3%player%'s DOLPHIN")
+							add 1 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {purchasedmultiplyer::%player%}
+							set slot 0 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&f&lCOMMON"
+							set {activecommondolphin::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "richstain", "&7[&f&lCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {commondolphindeactive1::%player%} is not set:
+									set {commondolphindeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "richstain", "&7[&f&lCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {commondolphindeactive2::%player%} is not set:
+									set {commondolphindeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "richstain", "&7[&f&lCOMMON&7] &3%player%'s DOLPHIN")
+								if {commondolphindeactive3::%player%} is not set:
+									set {commondolphindeactive3::%player%} to true
+								stop
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activecommondolphin::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 0 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&f&lCOMMON"
+						set {_u} to player's uuid
+						if {commondolphindeactive1::%player%} is true:
+							clear {commondolphindeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {commondolphindeactive1::%player%}
+						if {commondolphindeactive2::%player%} is true:
+							clear {commondolphindeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {commondolphindeactive3::%player%} is true:
+							clear {commondolphindeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activecommondolphin::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 1 from {purchasedmultiplyer::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#---------------------UNCOMMON DOLPHIN-------------------------
+		if index of event-slot is 2:
+			if {ownuncommondolphin::%player%} is true:
+				if {activeuncommondolphin::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 2 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommondolphin::%player%} to true
+							spawnPet(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+							add 3 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 3 to {purchasedmultiplyer::%player%}
+							set slot 2 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommondolphin::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {uncommondolphindeactive1::%player%} is not set:
+									set {uncommondolphindeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {uncommondolphindeactive2::%player%} is not set:
+									set {uncommondolphindeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								if {uncommondolphindeactive3::%player%} is not set:
+									set {uncommondolphindeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeuncommondolphin::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 2 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+						set {_u} to player's uuid
+						if {uncommondolphindeactive1::%player%} is true:
+							clear {uncommondolphindeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {uncommondolphindeactive1::%player%}
+						if {uncommondolphindeactive2::%player%} is true:
+							clear {uncommondolphinactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {uncommondolphindeactive3::%player%} is true:
+							clear {uncommondolphindeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeuncommondolphin::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 3 from {purchasedmultiplyer::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#--------------------RARE DOLPHIN------------------------------
+		if index of event-slot is 4:
+			if {ownraredolphin::%player%} is true:
+				if {activeraredolphin::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 4 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activeraredolphin::%player%} to true
+							spawnPet(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+							add 5 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 5 to {purchasedmultiplyer::%player%}
+							set slot 4 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activeraredolphin::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {raredolphindeactive1::%player%} is not set:
+									set {raredolphindeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {raredolphindeactive2::%player%} is not set:
+									set {raredolphindeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "richstain", "&7[&a&lUNCOMMON&7] &3%player%'s DOLPHIN")
+								if {raredolphindeactive3::%player%} is not set:
+									set {raredolphindeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeraredolphin::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 4 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&a&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+						set {_u} to player's uuid
+						if {raredolphindeactive1::%player%} is true:
+							clear {raredolphindeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {raredolphindeactive1::%player%}
+						if {raredolphindeactive2::%player%} is true:
+							clear {raredolphinactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {raredolphindeactive3::%player%} is true:
+							clear {raredolphindeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeraredolphin::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 5 from {purchasedmultiplyer::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#---------------------EPIC DOLPHIN-----------------------------
+		if index of event-slot is 6:
+			if {ownepicdolphin::%player%} is true:
+				if {activeepicdolphin::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 6 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&5&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepicdolphin::%player%} to true
+							spawnPet(player, "richstain", "&7[&5&lEPIC&7] &3%player%'s DOLPHIN")
+							add 7 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 7 to {purchasedmultiplyer::%player%}
+							set slot 6 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&5&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepicdolphin::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "richstain", "&7[&5&lEPIC&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {epicdolphindeactive1::%player%} is not set:
+									set {epicdolphindeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "richstain", "&7[&5&lEPIC&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {epicdolphindeactive2::%player%} is not set:
+									set {epicdolphindeactive2::%player%} to true
+								stop
+							if {pet1::%player%} = 2:
+								multipets3(player, "richstain", "&7[&5&lEPIC&7] &3%player%'s DOLPHIN")
+								if {epicdolphindeactive3::%player%} is not set:
+									set {epicdolphindeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeepicdolphin::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 6 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&5&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+						set {_u} to player's uuid
+						if {epicdolphindeactive1::%player%} is true:
+							clear {epicdolphindeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {epicdolphindeactive1::%player%}
+						if {epicdolphindeactive2::%player%} is true:
+							clear {epicdolphinactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {epicdolphindeactive3::%player%} is true:
+							clear {epicdolphindeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeepicdolphin::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 7 from {purchasedmultiplyer::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+		if index of event-slot is 8:
+			if {ownlegendarydolphin::%player%} is true:
+				if {activelegendarydolphin::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 8 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&6&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendarydolphin::%player%} to true
+							spawnPet(player, "richstain", "&7[&6&lLEGENDARY&7] &3%player%'s DOLPHIN")
+							add 10 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 10 to {purchasedmultiplyer::%player%}
+							set slot 8 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&6&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendarydolphin::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "richstain", "&7[&6&lLEGENDARY&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {legendarydolphindeactive1::%player%} is not set:
+									set {legendarydolphindeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "richstain", "&7[&6&lLEGENDARY&7] &3%player%'s DOLPHIN")
+								add 1 to {pet1::%player%}
+								if {legendarydolphindeactive2::%player%} is not set:
+									set {legendarydolphindeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "richstain", "&7[&6&lLEGENDARY&7] &3%player%'s DOLPHIN")
+								if {legendarydolphindeactive3::%player%} is not set:
+									set {legendarydolphindeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activelegendarydolphin::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 8 of (metadata tag "dolphin" of player) to skull of "richstain" parsed as offline player named "&7[&6&lDolphin&7]" with lore "&7" and "&7Gives a 3 percent multi" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+						set {_u} to player's uuid
+						if {legendarydolphindeactive1::%player%} is true:
+							clear {legendarydolphindeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {legendarydolphindeactive1::%player%}
+						if {legendarydolphindeactive2::%player%} is true:
+							clear {legendarydolphinactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {legendarydolphindeactive3::%player%} is true:
+							clear {legendarydolphindeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activelegendarydolphin::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 10 from {purchasedmultiplyer::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+				
+#---------------------CRAB PET------------------------------------------------------------------------------------------------
+on inventory click:
+	if event-inventory is (metadata tag "crab" of player):
+		cancel event
+		if index of event-slot is 0:
+			if {owncommoncrab::%player%} is true:
+				if {activecommoncrab::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 0 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&7&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&7&lCOMMON"
+							set {activecommoncrab::%player%} to true
+							spawnPet(player, "Florian_ep3", "&7[&f&lCOMMON&7] &c%player%'s CRAB")
+							add 0.5 to {petchance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 0.5 to {petchance::%player%}
+							set slot 0 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&7&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&7&lCOMMON"
+							set {activecommoncrab::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "Florian_ep3", "&7[&f&lCOMMON&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {commoncrabdeactive1::%player%} is not set:
+									set {commoncrabdeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "Florian_ep3", "&7[&f&lCOMMON&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {commoncrabdeactive2::%player%} is not set:
+									set {commoncrabdeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "Florian_ep3", "&7[&f&lCOMMON&7] &c%player%'s CRAB")
+								if {commoncrabdeactive3::%player%} is not set:
+									set {commoncrabdeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activecommoncrab::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 0 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&7&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&7&lCOMMON"
+						set {_u} to player's uuid
+						if {commoncrabdeactive1::%player%} is true:
+							clear {commoncrabdeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {commoncrabdeactive1::%player%}
+						if {commoncrabdeactive2::%player%} is true:
+							clear {commoncrabactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {commoncrabdeactive3::%player%} is true:
+							clear {commoncrabdeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activecommoncrab::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 0.5 from {petchance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#----------------UNCOMMON--------------------------------------
+		if index of event-slot is 2:
+			if {ownuncommoncrab::%player%} is true:
+				if {activeuncommoncrab::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 2 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&a&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommoncrab::%player%} to true
+							spawnPet(player, "Florian_ep3", "&7[&a&lUNCOMMON&7] &c%player%'s CRAB")
+							add 10 to {purchasedmultiplyer::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1 to {petchance::%player%}
+							set slot 2 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&a&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&a&lUNCOMMON"
+							set {activeuncommoncrab::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "Florian_ep3", "&7[&a&lUNCOMMON&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {uncommoncrabdeactive1::%player%} is not set:
+									set {uncommoncrabdeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "Florian_ep3", "&7[&a&lUNCOMMON&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {uncommoncrabdeactive2::%player%} is not set:
+									set {uncommoncrabdeactive2::%player%} to true
+								stop
+							add 1 to {petchance::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "Florian_ep3", "&7[&a&lUNCOMMON&7] &c%player%'s CRAB")
+								if {uncommoncrabdeactive3::%player%} is not set:
+									set {uncommoncrabdeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeuncommoncrab::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 2 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&a&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&a&lUNCOMMON"
+						set {_u} to player's uuid
+						if {uncommoncrabdeactive1::%player%} is true:
+							clear {uncommoncrabdeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {uncommoncrabdeactive1::%player%}
+						if {uncommoncrabdeactive2::%player%} is true:
+							clear {uncommoncrabactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {uncommoncrabdeactive3::%player%} is true:
+							clear {uncommoncrabdeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeuncommoncrab::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 1 from {petchance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#--------------------------RARE CRAB---------------------------
+		if index of event-slot is 4:
+			if {ownrarecrab::%player%} is true:
+				if {activerarecrab::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 4 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&9&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activerarecrab::%player%} to true
+							spawnPet(player, "Florian_ep3", "&7[&9&lRARE&7] &c%player%'s CRAB")
+							add 1.5 to {petchance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 1.5 to {petchance::%player%}
+							set slot 4 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&9&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&9&lRARE"
+							set {activerarecrab::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "Florian_ep3", "&7[&9&lRARE&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {rarecrabdeactive1::%player%} is not set:
+									set {rarecrabdeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "Florian_ep3", "&7[&9&lRARE&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {rarecrabdeactive2::%player%} is not set:
+									set {rarecrabdeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "Florian_ep3", "&7[&9&lRARE&7] &c%player%'s CRAB")
+								if {rarecrabdeactive3::%player%} is not set:
+									set {rarecrabdeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activerarecrab::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 4 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&9&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&9&lRARE"
+						set {_u} to player's uuid
+						if {rarecrabdeactive1::%player%} is true:
+							clear {rarecrabdeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {rarecrabdeactive1::%player%}
+						if {rarecrabdeactive2::%player%} is true:
+							clear {rarecrabactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {rarecrabdeactive3::%player%} is true:
+							clear {rarecrabdeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activerarecrab::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 1.5 from {petchance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#-----------------------------EPIC CRAB-------------------------
+		if index of event-slot is 6:
+			if {ownepiccrab::%player%} is true:
+				if {activeepiccrab::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 6 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&5&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepiccrab::%player%} to true
+							spawnPet(player, "Florian_ep3", "&7[&5&lEPIC&7] &c%player%'s CRAB")
+							add 2 to {petchance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 2 to {petchance::%player%}
+							set slot 6 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&5&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&5&lEPIC"
+							set {activeepiccrab::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "Florian_ep3", "&7[&5&lEPIC&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {epiccrabdeactive1::%player%} is not set:
+									set {epiccrabdeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "Florian_ep3", "&7[&5&lEPIC&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {epiccrabdeactive2::%player%} is not set:
+									set {epiccrabdeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "Florian_ep3", "&7[&5&lEPIC&7] &c%player%'s CRAB")
+								if {epiccrabdeactive3::%player%} is not set:
+									set {epiccrabdeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activeepiccrab::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 6 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&5&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&5&lEPIC"
+						set {_u} to player's uuid
+						if {epiccrabdeactive1::%player%} is true:
+							clear {epiccrabdeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {epiccrabdeactive1::%player%}
+						if {epiccrabdeactive2::%player%} is true:
+							clear {epiccrabactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {epiccrabdeactive3::%player%} is true:
+							clear {epiccrabdeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activeepiccrab::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 2 from {petchance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+#---------------------------LEGENDARY CRAB----------------------
+		if index of event-slot is 8:
+			if {ownlegendarycrab::%player%} is true:
+				if {activelegendarycrab::%player%} is not set:
+					if {multipetpass::%player%} is not set:
+						if {anypetactive::%player%} is not set:
+							set {anypetactive::%player%} to true
+							set slot 8 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&6&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendarycrab::%player%} to true
+							spawnPet(player, "Florian_ep3", "&7[&6&lLEGENDARY&7] &c%player%'s CRAB")
+							add 2.5 to {petchance::%player%}
+						else:
+							send "{@error} you have another pet equipped please unequip one to use this one"
+					else:
+						if {multipets::%player%} < 3:
+							add 1 to {multipets::%player%}
+							clear {anypetactive::%player%}
+							add 2.5 to {petchance::%player%}
+							set slot 8 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&6&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &a&lACTIVE" and "&7" and "&6&lLEGENDARY"
+							set {activelegendarycrab::%player%} to true
+							if {pet1::%player%} = 0:
+								spawnPet(player, "Florian_ep3", "&7[&6&lLEGENDARY&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {legendarycrabdeactive1::%player%} is not set:
+									set {legendarycrabdeactive1::%player%} to true
+								stop
+							if {pet1::%Player%} = 1:
+								multipets2(player, "Florian_ep3", "&7[&6&lLEGENDARY&7] &c%player%'s CRAB")
+								add 1 to {pet1::%player%}
+								if {legendarycrabdeactive2::%player%} is not set:
+									set {legendarycrabdeactive2::%player%} to true
+								stop
+							add 3 to {purchasedmultiplyer::%player%}
+							if {pet1::%player%} = 2:
+								multipets3(player, "Florian_ep3", "&7[&6&lLEGENDARY&7] &c%player%'s CRAB")
+								if {legendarycrabdeactive3::%player%} is not set:
+									set {legendarycrabdeactive3::%player%} to true
+								stop
+							
+						else:
+							send "{@error}&c&m                                                          "
+							send "{@error} you cannot equip more than 3 pet's at a time"
+							send "{@error}&c&m                                                          "
+				else:
+					if {activelegendarycrab::%player%} is true:
+						clear {anypetactive::%player%}
+						if {multipets::%player%} > 0:
+							remove 1 from {multipets::%player%}
+						set slot 8 of (metadata tag "crab" of player) to skull of "Florian_ep3" parsed as offline player named "&7[&6&lCRAB&7]" with lore "&7" and "&7adds a higher chance to get tokens" and "&7" and "&7Current Status: &c&lINACTIVE" and "&7" and "&6&lLEGENDARY"
+						set {_u} to player's uuid
+						if {legendarycrabdeactive1::%player%} is true:
+							clear {legendarycrabdeactive1::%player%}
+							if {aquapr::parrots::%{_u}%} is set:
+								kill {aquapr::armorstands::%{_u}%}
+								kill {aquapr::parrots::%{_u}%}
+								clear {aquapr::armorstands::%{_u}%}
+								clear {aquapr::parrots::%{_u}%}
+								clear {legendarycrabdeactive1::%player%}
+						if {legendarycrabdeactive2::%player%} is true:
+							clear {legendarycrabdeactive2::%player%}
+							if {aquaprpet2::parrots::%{_u}%} is set:
+								kill {aquaprpet2::armorstands::%{_u}%}
+								kill {aquaprpet2::parrots::%{_u}%}
+								clear {aquaprpet2::armorstands::%{_u}%}
+								clear {aquaprpet2::parrots::%{_u}%}
+						if {legendarycrabdeactive3::%player%} is true:
+							clear {legendarycrabdeactive3::%player%}
+							if {aquaprpet3::parrots::%{_u}%} is set:
+								kill {aquaprpet3::parrots::%{_u}%}
+								kill  {aquaprpet3::armorstands::%{_u}%}
+								clear {aquaprpet3::parrots::%{_u}%}
+								clear  {aquaprpet3::armorstands::%{_u}%}
+						clear {activelegendarycrab::%player%}
+						if {pet1::%Player%} > 0:
+							remove 1 from {pet1::%player%}
+						remove 2.5 from {petchance::%player%}
+			else:
+				send "{@error} you need to own this pet to equip it"
+
+#-----------------------CRAB EFFECTS---------------------------
+on block break of oxidized copper or packed ice or light blue glazed terracotta or prismarine:
+	set {givetokens::%player%} to {tokenfinder::%player%}/2+{petchance::%player%}
+	chance of {givetokens::%player%}%:
+		execute console command "tokens %player%"
+command /crabtokentest:
+	trigger:
+		send "%{givetokens::%player%}%, %{petchance::%player%}%"
+command /clearcrabt:
+	permission: *
+	trigger:
+		clear {petchance::%player%}
+		clear {givetokens::%player%}
+#----------------------------PET COMMANDS---------------------------------------------------------------------------------------			
+command /petsummon:
+	trigger:
+		set {_u} to player's uuid
+		spawn an armor stand at location of player
+		add "{Invisible:1b,NoBasePlate:1b,NoGravity:1b,Small:1b}" to nbt of spawned armor stand
+		set helmet of last spawned armor stand to bedrock
+		set {ultimatepets::armorstands::%{_u}%} to spawned armor stand
+		spawn a parrot at location of player
+		silence spawned parrot
+		apply invisibility of tier 1 without particles to spawned parrot for 111111 seconds
+		set {ultimatepets::parrots::%{_u}%} to spawned parrot
+		while {ultimatepets::parrots::%{_u}%} is alive:
+			wait 1 tick
+			if (distance between {ultimatepets::parrots::%{_u}%} and player) is less than 12.5:
+				set path target with speed (distance between {ultimatepets::parrots::%{_u}%} and player / 3) of {ultimatepets::parrots::%{_u}%} to (location 1 above player)
+			else:
+				teleport {ultimatepets::parrots::%{_u}%} to (location of block above player)
+				delete path target of {ultimatepets::parrots::%{_u}%}
+			teleport {ultimatepets::armorstands::%{_u}%} to {ultimatepets::parrots::%{_u}%}
+command /removearmorstand:
+	trigger:
+		if {ultimatepets::parrots::%{_u}%} is set:
+			kill {ultimatepets::armorstands::%{_u}%}
+			kill {ultimatepets::parrots::%{_u}%}
+			clear {ultimatepets::armorstands::%{_u}%}
+			clear {ultimatepets::parrots::%{_u}%}
+#-------------------------PET FUNCTIONS-----------------------------------------------------------------------------------------				
+function spawnPet(p: player, name: text, id: text):
+	if {_p} and {_name} and {_id} are set:
+		set {_u} to {_p}'s uuid
+		if {aquapr::parrots::%{_u}%} is set:
+			kill {aquapr::armorstands::%{_u}%}
+			kill {aquapr::parrots::%{_u}%}
+			delete {aquapr::armorstands::%{_u}%}
+			delete {aquapr::parrots::%{_u}%}
+		spawn an armor stand at location of {_p}
+		add "{Invisible:1b,Invulnerable:1b,NoBasePlate:1b,NoGravity:1b,Small:1b}" to nbt of spawned armor stand
+		set display name of last spawned armor stand to "&e%{_id}%"
+		set helmet of last spawned armor stand to skull of "%{_name}%" parsed as offline player
+		set {aquapr::armorstands::%{_u}%} to spawned armor stand
+		spawn a parrot at location of {_p}
+		silence spawned parrot
+		apply invisibility of tier 1 without particles to spawned parrot for 111111 seconds
+		apply resistance of tier 6 without particles to spawned parrot for 111111 seconds
+		set {aquapr::parrots::%{_u}%} to spawned parrot
+		while {aquapr::parrots::%{_u}%} is alive:
+			wait 1 tick
+			if (distance between {aquapr::parrots::%{_u}%} and {_p}) is less than 12.5:
+				set path target with speed (distance between {aquapr::parrots::%{_u}%} and {_p} / 3) of {aquapr::parrots::%{_u}%} to (location 1 above {_p})
+			else:
+				teleport {aquapr::parrots::%{_u}%} to (location of block above {_p})
+				delete path target of {aquapr::parrots::%{_u}%}
+			teleport {aquapr::armorstands::%{_u}%} to {aquapr::parrots::%{_u}%}
+function multipets2(p: player, name: text, id: text):
+	if {_p} and {_name} and {_id} are set:
+		set {_u} to {_p}'s uuid
+		if {aquaprpet2::parrots::%{_u}%} is set:
+			kill {aquaprpet2::armorstands::%{_u}%}
+			kill {aquaprpet2::parrots::%{_u}%}
+			delete {aquaprpet2::armorstands::%{_u}%}
+			delete {aquaprpet2::parrots::%{_u}%}
+		spawn an armor stand at location of {_p}
+		add "{Invisible:1b,Invulnerable:1b,NoBasePlate:1b,NoGravity:1b,Small:1b}" to nbt of spawned armor stand
+		set display name of last spawned armor stand to "&e%{_id}%"
+		set helmet of last spawned armor stand to skull of "%{_name}%" parsed as offline player
+		set {aquaprpet2::armorstands::%{_u}%} to spawned armor stand
+		spawn a parrot at location of {_p}
+		silence spawned parrot
+		apply invisibility of tier 1 without particles to spawned parrot for 111111 seconds
+		apply resistance of tier 6 without particles to spawned parrot for 111111 seconds
+		set {aquaprpet2::parrots::%{_u}%} to spawned parrot
+		while {aquaprpet2::parrots::%{_u}%} is alive:
+			wait 1 tick
+			if (distance between {aquaprpet2::parrots::%{_u}%} and {_p}) is less than 12.5:
+				set path target with speed (distance between {aquaprpet2::parrots::%{_u}%} and {_p} / 3) of {aquaprpet2::parrots::%{_u}%} to (location 1 above {_p})
+			else:
+				teleport {aquaprpet2::parrots::%{_u}%} to (location of block above {_p})
+				delete path target of {aquaprpet2::parrots::%{_u}%}
+			teleport {aquaprpet2::armorstands::%{_u}%} to {aquaprpet2::parrots::%{_u}%}
+function multipets3(p: player, name: text, id: text):
+	if {_p} and {_name} and {_id} are set:
+		set {_u} to {_p}'s uuid
+		if {aquaprpet3::parrots::%{_u}%} is set:
+			kill {aquaprpet3::armorstands::%{_u}%}
+			kill {aquaprpet3::parrots::%{_u}%}
+			delete {aquaprpet3::armorstands::%{_u}%}
+			delete {aquaprpet3::parrots::%{_u}%}
+		spawn an armor stand at location of {_p}
+		add "{Invisible:1b,Invulnerable:1b,NoBasePlate:1b,NoGravity:1b,Small:1b}" to nbt of spawned armor stand
+		set display name of last spawned armor stand to "&e%{_id}%"
+		set helmet of last spawned armor stand to skull of "%{_name}%" parsed as offline player
+		set {aquaprpet3::armorstands::%{_u}%} to spawned armor stand
+		spawn a parrot at location of {_p}
+		silence spawned parrot
+		apply invisibility of tier 1 without particles to spawned parrot for 111111 seconds
+		apply resistance of tier 6 without particles to spawned parrot for 111111 seconds
+		set {aquaprpet3::parrots::%{_u}%} to spawned parrot
+		while {aquaprpet3::parrots::%{_u}%} is alive:
+			wait 1 tick
+			if (distance between {aquaprpet3::parrots::%{_u}%} and {_p}) is less than 12.5:
+				set path target with speed (distance between {aquaprpet3::parrots::%{_u}%} and {_p} / 3) of {aquaprpet3::parrots::%{_u}%} to (location 1 above {_p})
+			else:
+				teleport {aquaprpet3::parrots::%{_u}%} to (location of block above {_p})
+				delete path target of {aquaprpet3::parrots::%{_u}%}
+			teleport {aquaprpet3::armorstands::%{_u}%} to {aquaprpet3::parrots::%{_u}%}
+command petstop:
+	trigger:
+		set {_u} to player's uuid
+		if {aquapr::parrots::%{_u}%} is set:
+			kill {aquapr::armorstands::%{_u}%}
+			kill {aquapr::parrots::%{_u}%}
+			clear {aquapr::armorstands::%{_u}%}
+			clear {aquapr::parrots::%{_u}%}
+		if {aquaprpet2::parrots::%{_u}%} is set:
+			kill {aquaprpet2::armorstands::%{_u}%}
+			kill {aquaprpet2::parrots::%{_u}%}
+			clear {aquaprpet2::armorstands::%{_u}%}
+			clear {aquaprpet2::parrots::%{_u}%}
+		if {aquaprpet3::parrots::%{_u}%} is set:
+			kill {aquaprpet3::parrots::%{_u}%}
+			kill  {aquaprpet3::armorstands::%{_u}%}
+			clear {aquaprpet3::parrots::%{_u}%}
+			clear  {aquaprpet3::armorstands::%{_u}%}
+command /petsummon1:
+	trigger:	
+		spawnPet(player, "%player%", "&3%player%'s pet")
+command /multipetpass:
+	trigger:
+		set {multipetpass::%player%} to true
+command /clearmultipetpass:
+	trigger:
+		clear {multipets::%player%}
+		clear {anypetactive::%player%}
+		clear {multipetpass::%player%}
+#-----------------------CUSTOM PET SPAWNING------------------------------------------------------------------------------------_		
+command /petcustomsummon:
+	trigger:
+		if {custompet::%Player%} is not set:
+			set {custompet::%Player%} to true
+			send "&3&m                                                                    "
+			send "&bplease type the name of the skull in chat note this wont give any effects"
+			send "&3&m                                                                    "
+		else:
+			clear {custompet::%Player%}
+			send "{@prefix} you can do this again to spawn your pet"
+on chat:
+	if {custompet::%Player%} is true:
+		cancel event
+		clear {custompet::%player%}
+		spawnPet(player, "%message%", "&7[&b&lCUSTOM&7] &3%player%'s pet")
+command billy:
+	trigger:
+		if {freepet::%player%} is not set:
+			send "{@color}you have unlocked the &lBILLY {@color}pet"
+			multipets4(player, "Xatify", "&7[{@color}&lBILLY&7] &3%player%'s pet")
+			
+function multipets4(p: player, name: text, id: text):
+	if {_p} and {_name} and {_id} are set:
+		set {_u} to {_p}'s uuid
+		if {aquaprpet4::parrots::%{_u}%} is set:
+			kill {aquaprpet4::armorstands::%{_u}%}
+			kill {aquaprpet4::parrots::%{_u}%}
+			delete {aquaprpet4::armorstands::%{_u}%}
+			delete {aquaprpet4::parrots::%{_u}%}
+		spawn an armor stand at location of {_p}
+		add "{Invisible:1b,Invulnerable:1b,NoBasePlate:1b,NoGravity:1b,Small:1b}" to nbt of spawned armor stand
+		set display name of last spawned armor stand to "&e%{_id}%"
+		set helmet of last spawned armor stand to skull of "%{_name}%" parsed as offline player
+		set {aquaprpet4::armorstands::%{_u}%} to spawned armor stand
+		spawn a parrot at location of {_p}
+		silence spawned parrot
+		apply invisibility of tier 1 without particles to spawned parrot for 111111 seconds
+		apply resistance of tier 6 without particles to spawned parrot for 111111 seconds
+		set {aquaprpet4::parrots::%{_u}%} to spawned parrot
+		while {aquaprpet4::parrots::%{_u}%} is alive:
+			wait 1 tick
+			if (distance between {aquaprpet4::parrots::%{_u}%} and {_p}) is less than 12.5:
+				set path target with speed (distance between {aquaprpet4::parrots::%{_u}%} and {_p} / 3) of {aquaprpet4::parrots::%{_u}%} to (location 1 behind {_p})
+			else:
+				teleport {aquaprpet4::parrots::%{_u}%} to (location of block behind {_p})
+				delete path target of {aquaprpet4::parrots::%{_u}%}
+			teleport {aquaprpet4::armorstands::%{_u}%} to {aquaprpet4::parrots::%{_u}%}
+			
+on quit:
+	set {_u} to player's uuid
+	kill {aquaprpet4::armorstands::%{_u}%}
+	kill {aquaprpet4::parrots::%{_u}%}
+	delete {aquaprpet4::armorstands::%{_u}%}
+	delete {aquaprpet4::parrots::%{_u}%}
+command resetafk:
+	trigger:
+		set {timeneeded} to 0
+	
+on entering of region "afk":
+	add player to {activeafk::*}
+	send title "{@color}&lWELCOME TO AFK" to player
+every 20 ticks:
+	if {timeforafk} > 0:
+		remove 1 from {timeforafk}
+		set {timetill} to {timeforafk} / 60 
+		loop {activeafk::*}:
+			add 1 to {afk::%loop-value%}
+			send action bar "{@color}Time until next afk key (&l%{timetill}%{@color}) minutes" to loop-value
+			if {afk::%loop-value%} > 60:
+				set {afkmin::%loop-value%} to {afk::%loop-value%}/60
+				bind hologram "&f;{@color}%loop-value% has been afk for;{@color}%{afkmin::%loop-value%}% minutes!" to loop-value for 1 seconds offset by 0, 4, 0
+			else:
+				bind hologram "&f;{@color}%loop-value% has been afk for;{@color}%{afk::%loop-value%}% seconds!" to loop-value for 1 seconds offset by 0, 4, 0
+	if {timeforafk} = 0:
+		if {afkboost} is not set:
+			set {timeforafk} to 300
+		if {afkboost} is true:
+			set {timeforafk} to 60
+			if {afktimeboost} > 0:
+				remove 1 from {afktimeboost}
+			else:
+				if {afktimeboost} = 0:
+					clear {afkboost}
+					broadcast "{@color}The afk boost has run out and is back to 5 minutes per key"
+		loop {activeafk::*}:
+			send title "{@color}&l1 AFK KEY HAS BEEN GRANTED" to loop-value
+			execute console command "goldencrates givekey %loop-value% afk 1"
+			stop
+command testafk:
+	trigger:
+		send "%{timeforafk}%"
+command testakf2:
+	trigger:
+		remove 59 from {timeforafk}
+		send "%{timeforafk}%"
+on exiting of region "afk":
+	remove player from {activeafk::*}
+	set {afk::%player%} to 0
+on join:
+	wait 10 ticks
+	execute console command "spawn %player%"
+	remove player from {activeafk::*}
+	set {afk::%player%} to 0
+command boostafk:
+	permission: *
+	trigger:
+		if {afkboost} is not set:
+			set {afkboost} to true
+			add 30 to {afktimeboost}
+		else:
+			if {afkboost} is true:
+				add 30 to {afktimeboost}
+command testboost:
+	trigger:
+		send "{@color}there is currently %{afktimeboost}% minutes left on the boost"

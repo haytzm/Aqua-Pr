@@ -1,0 +1,90 @@
+variables:
+	{unique::%Player%} = 1
+	{time.played.hours::%Player%} = 0
+	{time.played.minutes::%Player%} = 0
+	{time.played.seconds::%Player%} = 0
+options:
+	color: §x§4§d§c§8§a§3
+	prefix: &7[§x§4§d§c§8§a§3Aqua pr&7] 
+
+on block break of oxidized copper or packed ice or prismarine or light blue glazed terracotta:		
+	add 1 to {blockbrokenscore::%Player%}
+on join:
+	while player is online:
+		wipe player's sidebar
+		set name of sidebar of player to "{@color}&lAqua PR &7({@color}%{online}%&7)"
+		set score "&7" in sidebar of player to 10
+		set score "{@color}&m                      " in sidebar of player to 9
+		set score "&b&lINFO" in sidebar of player to 8
+		set score "&9&l&c🔥 &7Multiplier &3%{purchasedmultiplyer::%player%}%" in sidebar of player to 7
+		set score "&9⛁ &7tokens &f%player's balance%" in sidebar of player to 6
+		set score "&3⛏ &7blocks broken &f%{blockbrokenscore::%player%}%" in sidebar of player to 5
+		set score "&1&l⧗ &7Time PLayed &f%{time.played.hours::%Player%}%, %{time.played.minutes::%player%}%, %{time.played.seconds::%player%}%" in sidebar of player to 4
+		set score "&e☀ &7Rebirth Multiplier &f%{rebirthmultiplier::%player%}%" in sidebar of player to 3
+		set score "&b&lSERVER" in sidebar of player to 2
+		set score "&6🚪 &7Next keyall %{uniquekeyall}%/50" in sidebar of player to 1
+		wait 2 ticks
+on first join:
+	if {uniquekeyall} = 50:
+		broadcast "{@prefix} {@color}The server has hit it's keyall join number and so everyone will be getting 5 shark keys"
+		execute console command "goldencrates givekey * shark 5"
+		set {uniquekeyall} to 0
+	else:
+		add 1 to {uniquekeyall}
+	add 1 to {unique}
+	broadcast "{@color}Welcome &l%player% {@color}to Aqua PR &f({@color}##%{uniquekeyall}%&f)"
+	wipe player's sidebar
+command /testfirstjoin:
+	trigger:
+		add 1 to {uniquekeyall}
+		add 1 to {unique}
+		broadcast "{@color}Welcome &l%player% {@color}to Aqua PR &f({@color}##%{uniquekeyall}%&f)"
+		wipe player's sidebar
+on join:
+	add 1 to {onlinern}
+	if player is not in {keyall::*}:
+		add player to {keyall::*}
+on quit:
+	remove 1 from {onlinern}
+command /clearonline:
+	trigger:
+		set {onlinern} to 1
+		clear {unique::%Player%}
+on load:
+	set {onlinern} to 0
+	
+command testjoin:
+	trigger:
+		send "%{playtime::%player%::*}%"
+		send "%{_time.played.seconds::%player%}%"
+on join:
+	add player to {playtime::%player%::*}
+	while player is online:
+		add 1 to {time.played.seconds::%player%}
+		if {time.played.seconds::%player%} = 60:
+			add 1 to {time.played.minutes::%player%} 
+			remove 60 from {time.played.seconds::%player%}
+		if {time.played.minutes::%player%} = 60:
+			add 1 to {time.played.hours::%Player%}
+			remove 60 from {time.played.minutes::%player%}
+		wait a second
+on quit:
+	remove player from {playtime::%player%::*}
+	
+	
+command /info [<player>]:
+	trigger:
+		if arg-1 is not set:
+			set metadata tag "info" of player to chest inventory with 3 rows named "&c&lINFO"
+			set slot (integers between 0 and 30) of metadata tag "info" of player to gray stained glass pane named "&7"
+			set slot 13 of (metadata tag "info" of player) to skull of player named "{@color}&lINFO - %player%" with lore "&9&l&c🔥 &7Multiplier &3%{purchasedmultiplyer::%player%}%" and "&9⛁ &7tokens &f%player's balance%" and "&3⛏ &7blocks broken &f%{blockbrokenscore::%player%}%" and "&e☀ &7Rebirth Multiplier &f%{rebirthmultiplier::%player%}%"
+			open (metadata tag "info" of player) to player
+		else:
+			if arg-1 is set:
+				if player has permission "info.use":
+					set metadata tag "info" of player to chest inventory with 3 rows named "&c&lINFO"
+					set slot (integers between 0 and 30) of metadata tag "info" of player to gray stained glass pane named "&7"
+					set slot 13 of (metadata tag "info" of player) to skull of player named "{@color}&lINFO - %player%" with lore "&9&l&c🔥 &7Multiplier &3%{purchasedmultiplyer::%player%}%" and "&9⛁ &7tokens &f%player's balance%" and "&3⛏ &7blocks broken &f%{blockbrokenscore::%player%}%" and "&e☀ &7Rebirth Multiplier &f%{rebirthmultiplier::%player%}%"
+					open (metadata tag "info" of player) to player
+					
+					

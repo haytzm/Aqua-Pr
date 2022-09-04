@@ -1,0 +1,522 @@
+variables:
+	{parkourtime::%Player%} = 0
+	{onlinegui} = 0
+options:
+	clans: &7[&b&lCLANS&7]
+on entering of region "gotospawn":
+	teleport player to location at 0, 45, 0 in world "atlantis_serverspawn"
+	send title "&c&lNO ENTRY" with subtitle "&cthe void is very dangerous"
+		
+on step on stripped birch wood:
+	if {activeparkour::%Player%} is not set:
+		set {activeparkour::%Player%} to true
+		send "&7- do /stopparkour to end the parkour"
+		play sound "minecraft:block.note_block.chime" at volume 3 at pitch 1 to player 
+		while {activeparkour::%Player%} is set:
+			send action bar "&a&l%{parkourtime::%Player%}%" to player
+			wait 20 tick
+			add 1 to {parkourtime::%Player%}
+			send action bar "&a&l%{parkourtime::%Player%}%" to player
+on step on gold block:
+	if {activeparkour::%Player%} is true:
+		broadcast "&b&m                                                             "
+		broadcast "&3%player% just finished the parkour in %{parkourtime::%Player%}% seconds"
+		broadcast "&b&m                                                             "
+		add {parkourtime::%Player%} to {pklist::*}
+		add player to {pkplayerfinish::*}
+		execute player command "stopparkour"
+		
+command /stopparkour:
+	trigger:
+		clear {activeparkour::%Player%}
+		clear {parkourtime::%Player%}
+		wait 5 ticks
+		clear {activeparkour::%Player%}
+
+options:
+	prefix: &3&lCLANS &8»
+
+# {playerclan::%{_uuid}%}
+function createclan(name: text, p: player):
+	set {_uuid} to uuid of {_p}
+	if {playerclan::%{_uuid}%} is not set:
+		if {_name} matches "[a-zA-Z]+":
+			if length of {_name} is between 3 and 8:
+				if {clanList::*} does not contain {_name}:
+					set {playerclan::%{_uuid}%} to {_name}
+					set {clanMaxMembers.%{playerclan::%{_uuid}%}%} to 3
+					set {clanMembers.%{playerclan::%{_uuid}%}%} to 1
+					set {clanLevel.%{playerclan::%{_uuid}%}%} to 1
+					set {clanXp.%{playerclan::%{_uuid}%}%} to 0
+					set {clanXpRequired.%{playerclan::%{_uuid}%}%} to 1000
+					add {_p} to {clanMembersList.%{playerclan::%{_uuid}%}%::*}
+					set {clanLeader.%{playerclan::%{_uuid}%}%} to {_p}
+					set {clanPoints.%{playerclan::%{_uuid}%}%} to 100
+					set {clanXpPerMin.%{playerclan::%{_uuid}%}%} to 5
+					set {unlockedPvpToggle.%{playerclan::%{_uuid}%}%} to false
+					set {clanPVP.%{playerclan::%{_uuid}%}%} to false
+					set {%{_uuid}%.clanChat.%{playerclan::%{_uuid}%}%} to false
+					set {%{_uuid}%.playerTotalclanXp.%{playerclan::%{_uuid}%}%} to 0
+					add {_name} to {clanList::*}
+					send "{@prefix} &7You have created a clan named &3%{_name}%" to {_p}
+					
+				else:
+					send "{@prefix} &7This clan already exists!" to {_p}
+			else:
+				send "{@prefix} &7Your clan name must be between 3 and 8 characters!" to {_p}				
+		else:
+			send "{@prefix} &7Your clan name must be alphabetical!" to {_p}
+	else:
+		send "{@prefix} &7You are already in another clan!" to {_p}
+
+function updateLog(g: object, t: text):
+	add {_t} to {log.%{_g}%::*}
+	set {_size} to size of {log.%{_g}%::*}-9
+	set {_count} to 0
+	set {log.output.%{_g}%::*} to "&7"
+	loop {log.%{_g}%::*}:
+		add 1 to {_count}
+		if {_count} >= {_size}:
+			add "%loop-value%" to {log.output.%{_g}%::*}
+	
+
+function deleteclan(p: player):
+	set {_uuid} to uuid of {_p}
+	set {_name} to {playerclan::%{_uuid}%}
+	if {playerclan::%{_uuid}%} is set:
+		if {clanLeader.%{playerclan::%{_uuid}%}%} is {_p}:
+			remove {_name} from {clanList::*}
+			delete {clanMaxMembers.%{playerclan::%{_uuid}%}%}
+			delete {clanMembers.%{playerclan::%{_uuid}%}%}
+			delete {clanLevel.%{playerclan::%{_uuid}%}%}
+			delete {clanXp.%{playerclan::%{_uuid}%}%}
+			delete {clanXpRequired.%{playerclan::%{_uuid}%}%}
+			delete {clanLeader.%{playerclan::%{_uuid}%}%}
+			delete {clanPoints.%{playerclan::%{_uuid}%}%}
+			delete {clanPVP.%{playerclan::%{_uuid}%}%}
+			delete {clanXpPerMin.%{playerclan::%{_uuid}%}%}
+			delete {clanXpPerMin.%{_name}%}
+			delete {unlockedPvpToggle.%{_name}%}
+			delete {clanAdmin.%{_name}%::*}
+			delete {log.output.%{_name}%::*}
+			delete {log.%{_name}%::*}
+			delete {playerclan::%{_uuid}%}
+			loop {clanMembersList.%{_name}%::*}:
+				send "{@prefix} &7Your clan has been deleted!" to loop-value
+				set {_memberUUID} to uuid of loop-value
+				delete {%{_memberUUID}%.clanChat.%{playerclan::%{_memberUUID}%}%}
+				delete {%{_memberUUID}%.playerTotalclanXp.%{playerclan::%{_memberUUID}%}%}
+				delete {playerclan::%{_memberUUID}%}
+			delete {clanMembersList.%{_name}%::*}
+		else:
+			send "{@prefix} &7You must be the clan leader to do this!" to {_p}
+	else:
+		send "{@prefix} &7You must be in a clan to do this!" to {_p}
+
+on inventory click:
+function clanInfo(p: offline player, name: object):
+	create a new gui with virtual chest inventory with 6 rows named "&8Clan Info | %{_name}%":
+		set {_slots::*} to 0,1,2,3,4,5,6,7,8,9,10,12,14,16,17,18,19,20,21,22,23,24,25,26,27,35,36,44,45,46,47,48,49,50,51,52 and 53
+		format gui slot {_slots::*} with gray stained glass pane named "&f"
+		format gui slot 13 with skull of {clanLeader.%{_name}%} named "&3&lCLAN INFO" with lore "","&3Clan Name: &7%{_name}%","&3Clan Leader: &7%{clanLeader.%{_name}%}%","","&3Members: &7%{clanMembers.%{_name}%}%","&3Max Members: &7%{clanMaxMembers.%{_name}%}%","","&3Clan Level: &7%{clanLevel.%{_name}%}%","&3Clan XP: &7%{clanXp.%{_name}%}%&7/%{clanXpRequired.%{_name}%}%","&3Clan XP/Min: &7%{clanXpPerMin.%{_name}%}% &3(per online player)","&3Clan Points: &7%{clanPoints.%{_name}%}%",""                
+		if {log.output.%{_name}%::*} is not set:
+			set {_lore::*} to "&7Data unavialable..."
+		else:
+			set {_lore::*} to {log.output.%{_name}%::*}
+		format gui slot 11 with shiny book named "&3&lCLAN LOG" with lore {_lore::*}
+		format gui slot 15 with bottle o' enchanting named "&3&lCLAN XP" with lore "","&7Each clan member earns a certain xp/min","&7This only counts when the player is &3online","&7When you level up you gain &3100 Points",""
+		set {_slot} to 27
+		loop {clanMembersList.%{_name}%::*}:
+			set {_loopUUID} to uuid of loop-value
+			delete {_rankPrefix}
+			if {clanAdmin.%{playerclan::%{_loopUUID}%}%::*} contains loop-value:
+				set {_rankPrefix} to "&7Admin"
+			if {clanLeader.%{playerclan::%{_loopUUID}%}%} is loop-value:
+				set {_rankPrefix} to "&7Leader"
+			if {_rankPrefix} is not set:
+				set {_rankPrefix} to "&7Member"
+			
+			if "%loop-value%" parsed as player is not online:
+				set {_online} to "&c (Offline)"
+			else:
+				set {_online} to "&3 (Online)"
+			
+			add 1 to {_slot}
+			if {_slot} is 35:
+				add 2 to {_slot}
+			set {_uuid} to uuid of loop-value
+			format gui slot {_slot} with skull of loop-value named "&7%loop-value%%{_online}%" with lore "","&3Clan Rank: %{_rankPrefix}%","&7This player has gained a total of &3%{%{_uuid}%.playerTotalclanXp.%{playerclan::%{_uuid}%}%}% &7xp",""
+	open last gui for {_p}
+
+function clanInvite(p: offline player, name: object, leader: offline player):
+	if {clanAdmin.%{_name}%::*} contains {_leader}:
+		set {_allow} to true
+	if {clanLeader.%{_name}%} is {_leader}:
+		set {_allow} to true
+	if {_allow} is true:
+		if {clanMembers.%{_name}%} < {clanMaxMembers.%{_name}%}:
+			set {pendingclanJoin.%{_p}%} to {_name}
+			send "{@prefix} &7You have been invited to &3%{_name}%" to {_p}
+			send "{@prefix} &7You have &360 seconds &7before the invite expires" to {_p}
+			loop {clanMembersList.%{_name}%::*}:
+				send "{@prefix} &3%{_p}% &7has been invited to your clan!" to loop-value
+			wait 1 minute
+			delete {pendingclanJoin.%{_p}%}
+		else:
+			send "{@prefix} &7You have reached the member limit &3(/clan upgrade)" to {_leader}
+	else:
+		send "{@prefix} &7You must be the clan admin or leader!" to {_leader}
+		
+function clanJoin(p: player, name: text):
+	set {_uuid} to uuid of {_p}
+	if {playerclan::%{_uuid}%} is set:
+		send "{@prefix} &7You are already in a clan!" to {_p}
+	else:
+		if {_name} is {pendingclanJoin.%{_p}%}:
+			if {clanMembers.%{pendingclanJoin.%{_p}%}%} < {clanMaxMembers.%{pendingclanJoin.%{_p}%}%}:
+				loop {clanMembersList.%{_name}%::*}:
+					send "{@prefix} &3%{_p}% &7has joined your clan!" to loop-value
+				updateLog({_name}, "&3%{_p}% &7has joined the clan &3(%now%&3)")
+				set {playerclan::%{_uuid}%} to {pendingclanJoin.%{_p}%}
+				set {%{_uuid}%.clanChat.%{_name}%} to false
+				set {%{_uuid}%.playerTotalclanXp.%{playerclan::%{_uuid}%}%} to 0
+				send "{@prefix} &7You have joined &3%{playerclan::%{_uuid}%}%" to {_p}
+				add 1 to {clanMembers.%{playerclan::%{_uuid}%}%}
+				add {_p} to {clanMembersList.%{playerclan::%{_uuid}%}%::*}
+			else:
+				send "{@prefix} &7This clan is already full!" to {_p}
+			
+function clanKick(p: player, p2: offline player):
+	set {_p1UUID} to uuid of {_p}
+	set {_p2UUID} to uuid of {_p2}
+	if {clanAdmin.%{playerclan::%{_p1UUID}%}%::*} contains {_p}:
+		set {_allow} to true
+	if {clanLeader.%{playerclan::%{_p1UUID}%}%} is {_p}:
+		set {_allow} to true
+	if {playerclan::%{_p1UUID}%} is set:
+		if {_allow} is true:
+			if {playerclan::%{_p1UUID}%} is {playerclan::%{_p2UUID}%}:
+				if {_p} is not {_p2}:
+					if {_p2} is {clanLeader.%{playerclan::%{_p1UUID}%}%}:
+						send "{@prefix} &7You can't kick the clan leader!" to {_p}
+						stop
+					loop {clanMembersList.%{playerclan::%{_p1UUID}%}%::*}:
+						send "{@prefix} &3%{_p2}% &7has been removed from the clan!" to loop-value
+					updateLog({playerclan::%{_p1UUID}%}, "&3%{_p2}% &7was kicked from the clan &3(%now%&3)")
+					if {clanAdmin.%{playerclan::%{_p1UUID}%}%::*} contains {_p2}:
+						remove {_p2} from {clanAdmin.%{playerclan::%{_p1UUID}%}%::*}
+					remove {_p2} from {clanMembersList.%{playerclan::%{_p1UUID}%}%::*}
+					delete {%{_p2UUID}%.clanChat.%{playerclan::%{_p2UUID}%}%}
+					delete {%{_p2UUID}%.playerTotalclanXp.%{playerclan::%{_p2UUID}%}%}
+					delete {playerclan::%{_p2UUID}%}
+					remove 1 from {clanMembers.%{playerclan::%{_p1UUID}%}%}
+				else:
+					send "{@prefix} &7You can't kick yourself from the clan!" to {_p}
+		else:
+			send "{@prefix} &7You must be the clan admin or leader to do this!" to {_p}
+	else:
+		send "{@prefix} &7You must be in a clan to do this!" to {_p}
+
+function clanLeave(p: player):
+	set {_uuid} to uuid of {_p}
+	if {playerclan::%{_uuid}%} is set:
+		if {clanLeader.%{playerclan::%{_uuid}%}%} is not {_p}:
+			loop {clanMembersList.%{playerclan::%{_uuid}%}%::*}:
+				send "{@prefix} &3%{_p}% &7has left the clan!" to loop-value
+			updateLog({playerclan::%{_uuid}%}, "&3%{_p}% &7has left the clan &3(%now%&3)")
+			remove {_p} from {clanMembersList.%{playerclan::%{_uuid}%}%::*}
+			if {clanAdmin.%{playerclan::%{_uuid}%}%::*} contains {_p}:
+				remove {_p} from {clanAdmin.%{playerclan::%{_uuid}%}%::*}
+			remove 1 from {clanMembers.%{playerclan::%{_uuid}%}%}
+			delete {%{_uuid}%.clanChat.%{playerclan::%{_uuid}%}%}
+			delete {%{_uuid}%.playerTotalclanXp.%{playerclan::%{_uuid}%}%}
+			delete {playerclan::%{_uuid}%}
+		else:
+			send "{@prefix} &7The clan leader can't leave the clan!" to {_p}
+	else:
+		send "{@prefix} &7You are not in a clan!" to {_p}
+
+
+
+function clanUpgrade(p: player):
+	set {_uuid} to uuid of {_p}
+	if {clanAdmin.%{playerclan::%{_uuid}%}%::*} contains {_p}:
+		set {_allow} to true
+	if {clanLeader.%{playerclan::%{_uuid}%}%} is {_p}:
+		set {_allow} to true
+	if {playerclan::%{_uuid}%} is set:
+		create a new gui with virtual chest inventory with 3 rows named "&8Clan Upgrade | %{playerclan::%{_uuid}%}%":
+			format gui slot 16 with barrier named "&3&lComing Soon..."
+			format gui slot 14 with barrier named "&3&lComing Soon..."
+			if {clanMaxMembers.%{playerclan::%{_uuid}%}%} < 14:
+				format gui slot 12 with player head named "&3&lClan Member Limit" with lore "","&7Increase your clan member limit from &3%{clanMaxMembers.%{playerclan::%{_uuid}%}%}% &7to &3%({clanMaxMembers.%{playerclan::%{_uuid}%}%}+1)%","","&3Cost: &7%{clanMaxMembers.%{playerclan::%{_uuid}%}%}*250% &7Points","":
+					if {_allow} is not true:
+						close {_p}'s inventory
+						send "{@prefix} &7You must be the clan admin or leader to do this!" to {_p}
+						stop
+					set {_price} to {clanMaxMembers.%{playerclan::%{_uuid}%}%}*250
+					if {clanPoints.%{playerclan::%{_uuid}%}%} >= {_price}:
+						remove {_price} from {clanPoints.%{playerclan::%{_uuid}%}%}
+						add 1 to {clanMaxMembers.%{playerclan::%{_uuid}%}%}
+						updateLog({playerclan::%{_uuid}%}, "&3%{_p}% &7Upgraded the member limit to %{clanMaxMembers.%{playerclan::%{_uuid}%}%}% &3(%now%&3)")
+						close {_p}'s inventory
+						send "{@prefix} &7Your new member limit is &3%{clanMaxMembers.%{playerclan::%{_uuid}%}%}%" to {_p}
+					else:
+						close {_p}'s inventory
+						send "{@prefix} &7You need &3%{_price}% &7clan points for this. &3(You have %{clanPoints.%{playerclan::%{_uuid}%}%}%&3)" to {_p}
+			else:
+				format gui slot 12 with barrier named "&3&lClan Member Limit" with lore "&7||&7Maxed...||&7"
+				
+			format gui slot 10 with bottle o' enchanting named "&3&lClan XP/Min" with lore "","&7Increase your clan xp/min","&7Every online member is currently earning %{clanXpPerMin.%{playerclan::%{_uuid}%}%}%","&7Upgrading this will increase it to &3%({clanXpPerMin.%{playerclan::%{_uuid}%}%}+1)%&3/min","","&3Cost: &7%{clanXpPerMin.%{playerclan::%{_uuid}%}%}*1000% &7Points","":
+				if {_allow} is not true:
+					close {_p}'s inventory
+					send "{@prefix} &7You must be the clan admin or leader to do this!" to {_p}
+					stop
+				set {_price2} to {clanXpPerMin.%{playerclan::%{_uuid}%}%}*1000
+				if {clanPoints.%{playerclan::%{_uuid}%}%} >= {_price2}:
+					remove {_price2} from {clanPoints.%{playerclan::%{_uuid}%}%}
+					add 1 to {clanXpPerMin.%{playerclan::%{_uuid}%}%}
+					close {_p}'s inventory
+					send "{@prefix} &7Your new xp/min is &3%{clanXpPerMin.%{playerclan::%{_uuid}%}%}%" to {_p}
+					updateLog({playerclan::%{_uuid}%}, "&3%{_p}% &7Upgraded the clan xp/min to %{clanXpPerMin.%{playerclan::%{_uuid}%}%}% &3(%now%&3)")
+				else:
+					close {_p}'s inventory
+					send "{@prefix} &7You need &3%{_price2}% &7clan points for this. &3(You have %{clanPoints.%{playerclan::%{_uuid}%}%}%&3)" to {_p}
+		open last gui for {_p}
+	else:
+		send "{@prefix} &7You must be in a clan to do this!" to {_p}
+		
+		
+		
+	
+		
+		
+function clanPromote(p: player, p2: offline player):
+	set {_p1UUID} to uuid of {_p}
+	set {_p2UUID} to uuid of {_p2}
+	if {_p} is {_p2}:
+		send "{@prefix} &7You can't promote yourself!" to {_p}
+		stop
+	if {playerclan::%{_p1UUID}%} is {playerclan::%{_p2UUID}%}:
+		if {clanAdmin.%{playerclan::%{_p1UUID}%}%::*} does not contain {_p2}:
+			add {_p2} to {clanAdmin.%{playerclan::%{_p1UUID}%}%::*}
+			updateLog({playerclan::%{_p1UUID}%}, "&3%{_p2}% &7was promoted to clan admin &3(%now%&3)")
+			loop {clanMembersList.%{playerclan::%{_p1UUID}%}%::*}:
+				send "{@prefix} &3%{_p2}% &7has been promoted to clan admin!" to loop-value
+		else:
+			send "{@prefix} &7This player is already a clan admin!" to {_p}
+	else:
+		send "{@prefix} &7This player isn't in your clan!" to {_p}
+function clanDemote(p: player, p2: offline player):
+	set {_p1UUID} to uuid of {_p}
+	set {_p2UUID} to uuid of {_p2}
+	if {_p} is {_p2}:
+		send "{@prefix} &7You can't demote yourself!" to {_p}
+		stop
+	if {playerclan::%{_p1UUID}%} is {playerclan::%{_p2UUID}%}:
+		if {clanAdmin.%{playerclan::%{_p1UUID}%}%::*} contains {_p2}:
+			remove {_p2} from {clanAdmin.%{playerclan::%{_p1UUID}%}%::*}
+			updateLog({playerclan::%{_p1UUID}%}, "&3%{_p2}% &7was demoted to clan member &3(%now%&3)")
+			loop {clanMembersList.%{playerclan::%{_p1UUID}%}%::*}:
+				send "{@prefix} &3%{_p2}% &7has been demoted to clan member!" to loop-value
+		else:
+			send "{@prefix} &7This player can't be demoted further!" to {_p}
+	else:
+		send "{@prefix} &7This player isn't in your clan!" to {_p}
+
+function clanStats(p: player, name: object):
+	send "" to {_p}
+	send "&8» &3&lSTATS &8(&f%{_name}%&8)" to {_p}
+	send "" to {_p}
+	send "&8» &3Members: &7%{clanMembers.%{_name}%}%&8/&7%{clanMaxMembers.%{_name}%}%" to {_p}
+	send "" to {_p}
+	send "&8» &3Level: &7%{clanLevel.%{_name}%}% &8| &8(&7%{clanXp.%{_name}%}%&8/&7%{clanXpRequired.%{_name}%}%&8)" to {_p}
+	send "&8» &3Points: &7%{clanPoints.%{_name}%}%" to {_p}
+	send "" to {_p}
+
+function clanHelp(p: player, page: integer):
+	if {_page} = 1:
+		send "" to {_p}
+		send "&3&lCLANS HELP &8(&fPage 1&8/&f2&8)" to {_p}
+		send "" to {_p}
+		send "&8» &3/clan create <name> &7Creates a clan." to {_p}
+		send "&8» &3/clan invite <player> &7Invites a player to your clan" to {_p}
+		send "&8» &3/clan join <name> &7Allows you to join clans." to {_p}
+		send "&8» &3/clan leave &7Allows you to leave your clan." to {_p}
+		send "&8» &3/clan chat &7Toggles clan chat mode." to {_p}
+		send "&8» &3/clan help 2 &7Shows the next help page." to {_p}
+		send "" to {_p}
+	else if {_page} = 2:
+		send "" to {_p}
+		send "&3&lCLANS HELP &8(&fPage 2&8/&f2&8)" to {_p}
+		send "" to {_p}
+		send "&8» &3/clan kick <player> &7Kicks a player from your clan." to {_p}
+		send "&8» &3/clan upgrade &7Upgrade your clan." to {_p}
+		send "&8» &3/clan delete &7Delete your clan." to {_p}
+		send "&8» &3/clan <promote/demote> <player>" to {_p}
+		send "&8» &3/clan info <player/clan> &7Shows your entered clans info." to {_p}
+		send "&8» &3/clan stats <player/clan> &7Shows your entered clans stats." to {_p}
+		send "" to {_p}
+	else:
+		send "{@prefix} &7There are only 2 pages &3/clan help <page>" to {_p}
+
+function clanList(p: player, page: integer):
+	set {_last} to ({_page}*6)
+	set {_first} to {_last}-6
+	send "" to {_p}
+	send "&3&lCLAN LIST &8(&fPage %{_page}%&8)" to {_p}
+	send "" to {_p}
+	loop {clanList::*}:
+		set {_index} to (loop-index) parsed as integer
+		remove 1 from {_index}
+		if {_index} is between {_first} and ({_last}-1):
+			send "&8» &3%loop-value% &8| &7%{clanMembers.%loop-value%}%&8/&7%{clanMaxMembers.%loop-value%}% &7Members" to {_p}
+	send "" to {_p}
+
+command /clan [<text>] [<text>] [<text>]:
+	aliases: clans
+	trigger:
+		if arg-1 is "create":
+			if arg-2 is set:
+				createclan(arg-2, player)
+			else:
+				send "{@prefix} &7Invalid syntax: use &3/clan create <name>"
+		else if arg-1 is "delete" or "disband":
+			deleteclan(player)
+		
+		else if arg-1 is "info":
+			if arg-2 is not set:
+				if {playerclan::%player's uuid%} is set:
+					clanInfo(player, {playerclan::%player's uuid%})
+				else:
+					send "{@prefix} &7You are not in a clan. Use &3/clan info <player/clan>"
+			else:
+				if {clanList::*} contains arg-2:
+					loop {clanList::*}:
+						if "%loop-value%" is arg-2:
+							clanInfo(player, loop-value)
+				else:
+						
+					set {_p} to arg-2 parsed as offline player
+					set {_pUUID} to uuid of {_p}
+					if {playerclan::%{_pUUID}%} is set:
+						clanInfo(player, {playerclan::%{_pUUID}%})
+					else:
+						send "{@prefix} &7clan not found! &3(/clan info <player/clan>)"
+		else if arg-1 is "invite":
+			if arg-2 is not set:
+				send "{@prefix} &7Invalid syntax: use &3/clan invite <player>"
+			else:
+				if {playerclan::%player's uuid%} is set:
+					set {_playerInvited} to arg-2 parsed as offline player
+					clanInvite({_playerInvited}, {playerclan::%player's uuid%}, player)
+				else:
+					send "{@prefix} &7You must be in a clan to do this!"
+		else if arg-1 is "join":
+			if arg-2 is not set:
+				send "{@prefix} &7Invalid syntax: use &3/clan join <clan>"
+			else:
+				clanJoin(player, arg-2)
+		else if arg-1 is "kick":
+			if arg-2 is not set:
+				send "{@prefix} &7Invalid syntax: use &3/clan kick <player>"
+			else:
+				clanKick(player, arg-2 parsed as offline player)
+		else if arg-1 is "chat":
+			if {playerclan::%player's uuid%} is set:
+				if {%player's uuid%.clanChat.%{playerclan::%player's uuid%}%} is false: 
+					set {%player's uuid%.clanChat.%{playerclan::%player's uuid%}%} to true
+					send "{@prefix} &7clan chat has been enabled &3(/clan chat)"
+				else:
+					set {%player's uuid%.clanChat.%{playerclan::%player's uuid%}%} to false
+					send "{@prefix} &7clan chat has been disabled &3(/clan chat)"
+			else:
+				send "{@prefix} &7You must be in a clan to do this!"
+		else if arg-1 is "leave":
+			clanLeave(player)
+		
+		else if arg-1 is "upgrade":
+			clanUpgrade(player)
+		
+		else if arg-1 is "promote":
+			if {playerclan::%player's uuid%} is set:
+				if {clanLeader.%{playerclan::%player's uuid%}%} is player:
+					clanPromote(player, arg-2 parsed as offline player)
+				else:
+					send "{@prefix} &7You must be the clan leader to do this!"
+			else:
+				send "{@prefix} &7You must be in a clan to do this!"
+		else if arg-1 is "demote":
+			if {playerclan::%player's uuid%} is set:
+				if {clanLeader.%{playerclan::%player's uuid%}%} is player:
+					clanDemote(player, arg-2 parsed as offline player)
+				else:
+					send "{@prefix} &7You must be the clan leader to do this!"
+			else:
+				send "{@prefix} &7You must be in a clan to do this!"	
+		else if arg-1 is "stats":
+			if arg-2 is not set:
+				if {playerclan::%player's uuid%} is set:
+					clanStats(player, {playerclan::%player's uuid%})
+				else:
+					send "{@prefix} &7You are not in a clan. Use &3/clan stats <player/clan>"
+			else:
+				if {clanList::*} contains arg-2:
+					loop {clanList::*}:
+						if "%loop-value%" is arg-2:
+							clanStats(player, loop-value)
+				else:
+						
+					set {_p} to arg-2 parsed as offline player
+					set {_pUUID} to uuid of {_p}
+					if {playerclan::%{_pUUID}%} is set:
+						clanStats(player, {playerclan::%{_pUUID}%})
+					else:
+						send "{@prefix} &7clan not found! &3(/clan stats <player/clan>)"
+		else if arg-1 is "list":
+			if arg-2 is not set:
+				send "{@prefix} &7Please include a page number! &3(/clan list <page>)"
+			else:
+				set {_arg-2} to arg-2 parsed as integer
+				if {_arg-2} is not set:
+					send "{@prefix} &7Please include a page number! &3(/clan list <page>)"
+					stop
+				clanList(player, {_arg-2})
+		
+		else:
+			if arg-1 is "help":
+				if arg-2 is set:
+					set {_page} to arg-2 parsed as integer
+					if {_page} is set:
+						clanHelp(player, {_page})
+					else:
+						clanHelp(player, 1)
+				else:
+					clanHelp(player, 1)
+			else:
+				clanHelp(player, 1)
+		
+		
+				
+on chat:
+	if {%player's uuid%.clanChat.%{playerclan::%player's uuid%}%} is true:
+		cancel event
+		loop {clanMembersList.%{playerclan::%player's uuid%}%::*}:
+			message "&3[CLAN] &7%player%: &f%message%" to loop-value
+	
+every minute:
+	loop all players:
+		if {playerclan::%loop-player's uuid%} is set:
+			add {clanXpPerMin.%{playerclan::%loop-player's uuid%}%} to {clanXp.%{playerclan::%loop-player's uuid%}%}
+			add {clanXpPerMin.%{playerclan::%loop-player's uuid%}%} to {%loop-player's uuid%.playerTotalclanXp.%{playerclan::%loop-player's uuid%}%}
+			
+	loop {clanList::*}:
+		if {clanXp.%loop-value%} >= {clanXpRequired.%loop-value%}:
+			add 1 to {clanLevel.%loop-value%}
+			add 100 to {clanPoints.%loop-value%}
+			add 1000 to {clanXpRequired.%loop-value%}
+			if {clanLevel.%loop-value%} > 15:
+				add 1500 to {clanXpRequired.%loop-value%}
+			updateLog(loop-value, "&7Your clan is now level &7%{clanLevel.%loop-value%}% &3(%now%&3)")
+			loop {clanMembersList.%loop-value%::*}:
+				send "{@prefix} &7Your clan is now level &3%{clanLevel.%loop-value-1%}%" to loop-value-2

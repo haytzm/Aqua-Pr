@@ -1,0 +1,131 @@
+command tutorial:
+	trigger:
+		teleport player to {tutorialpos1}
+		send title "&b&lWELCOME TO AQUAPR" with subtitle "&bupgrade your pickaxe here"
+		wait 80 ticks
+		teleport player to {tutorialpos2}
+		send title "&b&lBEGIN MINING HERE" with subtitle "&byour pickaxe will mine faster over time"
+		wait 80 ticks
+		teleport player to {tutorialpos3}
+		send title "&b&lCOMPRESS YOUR ORES HERE" with subtitle "&byou can also purchase autocompressors here"
+		wait 80 ticks
+		teleport player to {tutorialpos4}
+		send title "&b&lOPEN CRATES HERE" with subtitle "&bthey can give almost everything in the game"
+		wait 80 ticks
+		teleport player to {tutorialpos5}
+		send title "&b&lGO TO THE FIRST WORLD HERE" with subtitle "&bthis is how to progress in the server"
+		wait 80 ticks
+		teleport player to {tutorialpos6}
+		send title "&a&l ENJOY YOUR TIME HERE" with subtitle "&ado /link for 3 free shark keys"
+		
+command settut1:
+	permission: *
+	trigger:
+		set {tutorialpos1} to player's location
+command settut2:
+	permission: *
+	trigger:
+		set {tutorialpos2} to player's location
+command settut3:
+	permission: *
+	trigger:
+		set {tutorialpos3} to player's location
+command settut4:
+	permission: *
+	trigger:
+		set {tutorialpos4} to player's location
+command settut5:
+	permission: *
+	trigger:
+		set {tutorialpos5} to player's location
+command settut6:
+	permission: *
+	trigger:
+		set {tutorialpos6} to player's location
+
+discord command !online:
+	trigger:
+		set presence of bot "Aqua PR" to watching "%{online}% players on Aqua PR"
+on load:
+	login to "MTAxMjQ5Mzc0NzcwNTEwMjQ2Nw.GJr-yU.uIf0rEKInrhxbu7L4rV48YMe0n4X0VMNxHv2j8" with name "Aqua PR"
+		
+discord command !test:
+	trigger:
+		set {player} to event-member 
+		make embed:
+			set embed color of embed to blue
+			set title of embed to "LINK"
+			set description of embed to "**CODE WILL BE BELOW**%nl%%event-member%"
+			set author of the embed to "Author name (Can point to URL)"
+			set timestamp of embed to now
+		reply with last embed		
+discord command !link [<player>] [<integer>]:
+	trigger:
+		if arg-2 is not set:
+			make embed:
+				set embed color of embed to orange
+				set title of embed to "**ERROR**"
+				set description of embed to "**YOU NEED A CODE TO LINK**"
+				set author of the embed to "%event-member%"
+				set timestamp of embed to now
+			reply with last embed
+		if arg-1 is not set:
+			make embed:
+				set embed color of embed to orange
+				set title of embed to "**ERROR**"
+				set description of embed to "**YOU NEED TO NAME A PLAYER**"
+				set author of the embed to "%event-member%"
+				set timestamp of embed to now
+			reply with last embed	
+		else:
+			if arg-2 is an integer:
+				if arg-1 is set:
+					if arg-2 contains {linkcodes::*}:
+						if arg-1 contains {onlinern::*}:
+							make embed:
+								set embed color of embed to lime
+								set title of embed to "**YOU HAVE LINKED YOUR ACCOUNT**"
+								set author of the embed to "%event-member%"
+								set timestamp of embed to now
+								set {linked::%arg-1%} to true
+								send "&aYou have successfully linked your account" to arg-1
+								execute console command "goldencrates givekey %arg-1% shark 3"
+								send title "&a&lYou have linked your account" to arg-1 
+								remove {linkcode::%arg-1%} from {linkcodes::*}
+							reply with last embed
+on join:
+	add player to {onlinern::*}
+	add 1 to {online}
+	set presence of bot "Aqua PR" to watching "%{online}% players on Aqua PR"
+on quit:
+	remove player from {onlinern::*}
+	remove 1 from {online}
+	set presence of bot "Aqua PR" to watching "%{online}% players on Aqua PR"
+command link:
+	trigger:
+		if {linked::%Player%} is not set:
+			if {linking::%Player%} is not set:
+				set {linking::%Player%} to true
+				set {linkcode::%player%} to random integer between 1000 and  3204
+				set {linkcodeplayer::%{linkcode::%player%}%} to player
+				add {linkcode::%player%} to {linkcodes::*} 
+				send "&7Your code to link to discord is %{linkcode::%player%}% you have 60 seconds before the code expires"
+				wait 60 seconds 
+				remove {linkcode::%player%} from {linkcodes::*}
+				clear {linking::%Player%}
+				send "&aYour code has expired please make another one if you havent linked yet"
+			else:
+				send "&cyou need to wait to try linking your account again"
+		else:
+			send "&cyou have already linked your account please refrain from trying this again" 
+			
+command clearlink:
+	permission: *
+	trigger:
+		clear {linked::%Player%}
+		remove {linkcode::%player%} from {linkcodes::*} 
+command testlink:
+	trigger:
+		send "%{linked::%Player%}%"
+		send "%{onlinern::*}%"
+		send "%{linkcodes::*} %"
